@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="32" height="31" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="44">
+<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="32" height="31" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="46">
  <properties>
   <property name="skyColor" type="color" value="#ffffffff"/>
  </properties>
@@ -30,7 +30,7 @@
   <object id="1" name="water" type="water" x="96" y="320" width="256" height="160"/>
  </objectgroup>
  <objectgroup id="4" name="Generic">
-  <object id="11" name="player" type="player" x="95" y="156">
+  <object id="11" name="player" type="player" x="141" y="179">
    <point/>
   </object>
   <object id="29" name="ladder" type="ladder" x="32" y="175" width="32" height="145"/>
@@ -53,11 +53,11 @@
   <object id="33" x="96" y="480" width="288" height="32"/>
   <object id="34" x="352" y="352" width="32" height="128"/>
   <object id="35" x="128" y="96" width="96" height="32"/>
-  <object id="43" x="352" y="320">
+  <object id="45" x="386" y="319">
    <properties>
     <property name="dbgShow" value="1"/>
    </properties>
-   <polyline points="32,0 96,-64 256,-128 320,-192"/>
+   <polyline points="0,0 41,-18 65,-19 84,-27 112,-32 136,-43 171,-48 185,-64 217,-81 241,-101 273,-130 298,-130 329,-147 383,-191"/>
   </object>
  </objectgroup>
 </map>

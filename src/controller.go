@@ -62,6 +62,13 @@ func (c *characterController) update() {
 
 	// Handle collision
 	{
+		// Handle slope movement
+		if res, _ := core.CheckForCollisionEx("slope", c.Object, core.RoundFloatToInt32(x), core.RoundFloatToInt32(y)+4); res.Colliding() && !res.Teleporting {
+			y = core.RoundInt32ToFloat(res.ResolveY)
+			c.Object.Movement.Y = 0
+		}
+
+		// Handle solid+trigger collisions
 		if res, _ := core.CheckForCollisionEx("solid+trigger", c.Object, core.RoundFloatToInt32(x), 0); res.Colliding() && !res.Teleporting {
 			x = core.RoundInt32ToFloat(res.ResolveX)
 			c.Object.Movement.X = 0
@@ -72,18 +79,13 @@ func (c *characterController) update() {
 			c.Object.Movement.Y = 0
 		}
 
-		if res, _ := core.CheckForCollisionEx("slope", c.Object, core.RoundFloatToInt32(x), core.RoundFloatToInt32(y)+4); res.Colliding() /* && !res.Teleporting */ {
-			if res.ResolveX != 0 {
-				x = core.RoundInt32ToFloat(res.ResolveX)
-				c.Object.Movement.X = 0
-			}
-
-			if res.ResolveY != 0 {
-				y = core.RoundInt32ToFloat(res.ResolveY)
-				c.Object.Movement.Y = 0
-			}
+		// Handle ceiling solid+trigger
+		if res, _ := core.CheckForCollisionEx("solid+trigger", c.Object, 0, -4); res.Colliding() && !res.Teleporting {
+			y = core.RoundInt32ToFloat(res.ResolveY)
+			c.Object.Movement.Y = 0
 		}
 
+		// Apply motion
 		c.Object.Position.X += x
 		c.Object.Position.Y += y
 	}
