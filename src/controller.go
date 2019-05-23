@@ -88,7 +88,7 @@ func (c *characterController) update() {
 		c.Object.Position.Y += y
 	}
 
-	c.IsFalling = c.Object.Movement.Y > 0 && !c.IsInWater
+	c.IsFalling = c.Object.Movement.Y > 0 && !c.IsInWater && !c.IsOnLadder
 
 	if c.IsOnLadder {
 		c.Object.Movement.Y = 0
