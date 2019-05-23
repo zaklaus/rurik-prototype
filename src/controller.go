@@ -44,11 +44,12 @@ func (c *characterController) down() {
 func (c *characterController) update() {
 	// Handle free fall
 	{
-		down, _ := core.CheckForCollision(c.Object, 0, 4)
+		down, _ := core.CheckForCollisionEx("*", c.Object, 0, 4)
 		c.IsGrounded = down.Colliding()
+		if !c.IsGrounded && !c.IsInWater && !c.IsOnLadder {
+			g := gravity
 
-		if /* !c.IsGrounded && */ !c.IsInWater && !c.IsOnLadder {
-			c.Object.Movement.Y += gravity * system.FrameTime
+			c.Object.Movement.Y += g * system.FrameTime
 
 			if c.Object.Movement.Y > maxFallSpeed {
 				c.Object.Movement.Y = maxFallSpeed
@@ -61,18 +62,29 @@ func (c *characterController) update() {
 
 	// Handle collision
 	{
-		if res, _ := core.CheckForCollision(c.Object, core.RoundFloatToInt32(x), 0); res.Colliding() {
+		if res, _ := core.CheckForCollisionEx("solid+trigger", c.Object, core.RoundFloatToInt32(x), 0); res.Colliding() && !res.Teleporting {
 			x = core.RoundInt32ToFloat(res.ResolveX)
 			c.Object.Movement.X = 0
 		}
 
-		c.Object.Position.X += x
-
-		if res, _ := core.CheckForCollision(c.Object, 0, core.RoundFloatToInt32(y)); res.Colliding() {
+		if res, _ := core.CheckForCollisionEx("solid+trigger", c.Object, 0, core.RoundFloatToInt32(y)); res.Colliding() && !res.Teleporting {
 			y = core.RoundInt32ToFloat(res.ResolveY)
 			c.Object.Movement.Y = 0
 		}
 
+		if res, _ := core.CheckForCollisionEx("slope", c.Object, core.RoundFloatToInt32(x), core.RoundFloatToInt32(y)+4); res.Colliding() /* && !res.Teleporting */ {
+			if res.ResolveX != 0 {
+				x = core.RoundInt32ToFloat(res.ResolveX)
+				c.Object.Movement.X = 0
+			}
+
+			if res.ResolveY != 0 {
+				y = core.RoundInt32ToFloat(res.ResolveY)
+				c.Object.Movement.Y = 0
+			}
+		}
+
+		c.Object.Position.X += x
 		c.Object.Position.Y += y
 	}
 
