@@ -133,7 +133,7 @@ func (g *gameMode) PostDraw() {
 
 	case statePlay:
 		// Generates and applies the lightmaps
-		//core.UpdateLightingSolution()
+		core.UpdateLightingSolution()
 	}
 
 }
