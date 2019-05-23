@@ -1,0 +1,8 @@
+---
+name: Graphics
+author: Dominik Madarász
+version: v1
+desc: Graphics assets used in Darkorbia
+chunks:
+- file: gfx/player.json
+- file: gfx/player.png

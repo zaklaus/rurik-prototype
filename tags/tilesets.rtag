@@ -1,0 +1,8 @@
+---
+name: Tilesets
+author: Dominik Madarász
+version: v1
+desc: Contains various tilesets used within the game
+chunks: 
+- file: tilesets/devset.tsx
+- file: tilesets/devset.png
