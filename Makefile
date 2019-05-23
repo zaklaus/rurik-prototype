@@ -1,7 +1,7 @@
 all:
-	go build -o build/darkorbia.exe src/*.go
+	go build -o build/game.exe src/*.go
 
 play:
-	./build/darkorbia.exe
+	./build/game.exe
 
 bt: all play
