@@ -14,7 +14,15 @@ type characterController struct {
 }
 
 func (c *characterController) move(factor float32) {
-	c.Object.Movement.X = factor * movementSpeed * system.FrameTime
+	if c.IsFalling {
+		return
+	}
+
+	c.Object.Movement.X = core.ScalarLerp(
+		c.Object.Movement.X,
+		factor*movementSpeed*system.FrameTime,
+		movementSmoothingFactor,
+	)
 }
 
 func (c *characterController) jump() {
