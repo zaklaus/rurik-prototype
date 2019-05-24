@@ -32,7 +32,7 @@ func registerInputActions() {
 }
 
 func registerClasses() {
-	core.RegisterClass("player", "NewPlayer", NewPlayer)
-	core.RegisterClass("water", "NewWater", NewWater)
-	core.RegisterClass("ladder", "NewLadder", NewLadder)
+	core.RegisterClass("player", NewPlayer)
+	core.RegisterClass("water", NewWater)
+	core.RegisterClass("ladder", NewLadder)
 }
