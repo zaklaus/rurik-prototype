@@ -63,7 +63,7 @@ func (c *characterController) update() {
 	// Handle collision
 	{
 		// Handle slope movement
-		if res, _ := core.CheckForCollisionEx("slope", c.Object, core.RoundFloatToInt32(x), core.RoundFloatToInt32(y)+4); res.Colliding() && !res.Teleporting {
+		if res, _ := core.CheckForCollisionEx("slope", c.Object, core.RoundFloatToInt32(x), core.RoundFloatToInt32(y)+4); res.Colliding() {
 			y = core.RoundInt32ToFloat(res.ResolveY)
 			c.Object.Movement.Y = 0
 		}
