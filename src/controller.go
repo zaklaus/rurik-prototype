@@ -79,12 +79,6 @@ func (c *characterController) update() {
 			c.Object.Movement.Y = 0
 		}
 
-		// Handle ceiling solid+trigger
-		if res, _ := core.CheckForCollisionEx("solid+trigger", c.Object, 0, -4); res.Colliding() && !res.Teleporting {
-			y = core.RoundInt32ToFloat(res.ResolveY)
-			c.Object.Movement.Y = 0
-		}
-
 		// Apply motion
 		c.Object.Position.X += x
 		c.Object.Position.Y += y

@@ -27,10 +27,6 @@ func NewWater(o *core.Object) {
 	o.GetAABB = core.GetSolidAABB
 
 	o.HandleCollisionEnter = func(res *resolv.Collision, o, other *core.Object) {
-		if res.ResolveX != 0 {
-			return
-		}
-
 		switch v := other.UserData.(type) {
 		case *player:
 			v.ctrl.IsInWater = true
@@ -38,10 +34,6 @@ func NewWater(o *core.Object) {
 	}
 
 	o.HandleCollisionLeave = func(res *resolv.Collision, o, other *core.Object) {
-		if res.ResolveX != 0 {
-			return
-		}
-
 		switch v := other.UserData.(type) {
 		case *player:
 			v.ctrl.IsInWater = false
