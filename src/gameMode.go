@@ -68,6 +68,9 @@ func (g *gameMode) Update() {
 		updateDialogue()
 		updateNotifications()
 
+		/* particle systems */
+		updateWaterParticles()
+
 		if rl.IsKeyPressed(rl.KeyEscape) && core.CurrentMap.Name != "start" {
 			g.playState = statePaused
 		}
@@ -96,7 +99,8 @@ type demoGameSaveData struct {
 func (g *gameMode) Draw() {
 	rl.BeginMode2D(core.RenderCamera)
 	{
-		core.DrawMap(true)
+		core.DrawMap(false)
+		drawWaterParticles()
 	}
 	rl.EndMode2D()
 }

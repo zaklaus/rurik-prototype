@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="32" height="31" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="46">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="32" height="31" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="47">
  <properties>
   <property name="skyColor" type="color" value="#ffffffff"/>
  </properties>
  <tileset firstgid="1" source="../../tilesets/devset.tsx"/>
  <layer id="6" name="Tile Layer 1" width="32" height="31">
   <data encoding="base64" compression="zlib">
-   eJztkzEKACAIALO5/7+3KYggHVKLuIObFA4ES/kPCdrN6MvkSX+n1c/mhb51I+/GOouGvt4fNkPtrzyshvT/7t8QAAAA8ul8xwFh
+   eJxjYBh+gJFGaulhPyMSpsR+XJiQ/fQGg8F+QmFEbTvQ5WgNRu3Hbz+x8Y4vX1EDj9o/su0fCDwKRsEoGAWjYBSMAvoDAEytAME=
   </data>
  </layer>
  <layer id="7" name="Tile Layer 2" width="32" height="31">
@@ -19,7 +19,7 @@
    <property name="isOverlay" value="1"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJztzTENAAAMw7ASKH+6hbBjry3lTgJAj/z9AQC+BifNAgk=
+   eJztwTEBAAAAwqD1T20KP6AAAACAtwEPgAAB
   </data>
  </layer>
  <objectgroup id="2" name="Water">

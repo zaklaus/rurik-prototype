@@ -73,6 +73,10 @@ func updatePlayer(p *core.Object, dt float32) {
 		if system.GetAxis("vertical") > 0 {
 			ctrl.down()
 		}
+
+		if core.DebugMode && rl.IsKeyDown(rl.KeyU) {
+			pushWaterParticle(p.GetWorld(), p.Position)
+		}
 	} else {
 		return
 	}

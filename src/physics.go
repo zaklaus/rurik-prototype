@@ -9,4 +9,5 @@ const (
 	jumpForce               float32 = 290
 	movementSpeed           float32 = 144
 	movementSmoothingFactor float32 = 0.22
+	movementFallSpeedFactor float32 = 0.25
 )

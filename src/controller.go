@@ -6,21 +6,28 @@ import (
 )
 
 type characterController struct {
-	Object     *core.Object
-	IsGrounded bool
-	IsFalling  bool
-	IsInWater  bool
-	IsOnLadder bool
+	Object            *core.Object
+	IsGrounded        bool
+	IsFalling         bool
+	IsInWater         bool
+	IsOnLadder        bool
+	IsGettingOnLadder bool
 }
 
 func (c *characterController) move(factor float32) {
-	if c.IsFalling {
+	if c.IsFalling && factor == 0 {
 		return
+	}
+
+	speed := movementSpeed
+
+	if c.IsFalling {
+		speed *= movementFallSpeedFactor
 	}
 
 	c.Object.Movement.X = core.ScalarLerp(
 		c.Object.Movement.X,
-		factor*movementSpeed*system.FrameTime,
+		factor*speed*system.FrameTime,
 		movementSmoothingFactor,
 	)
 }
@@ -96,5 +103,10 @@ func (c *characterController) update() {
 
 	if c.IsOnLadder {
 		c.Object.Movement.Y = 0
+	}
+
+	if c.IsGettingOnLadder && c.IsFalling {
+		c.IsGettingOnLadder = false
+		c.IsOnLadder = true
 	}
 }

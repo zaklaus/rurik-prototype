@@ -17,17 +17,17 @@ func NewLadder(o *core.Object) {
 	o.GetAABB = core.GetSolidAABB
 
 	o.HandleCollisionEnter = func(res *resolv.Collision, o, other *core.Object) {
-		other.Movement.Y = 0
-
 		switch v := other.UserData.(type) {
 		case *player:
-			v.ctrl.IsOnLadder = true
+			v.ctrl.IsGettingOnLadder = true
+			v.ctrl.IsOnLadder = false
 		}
 	}
 
 	o.HandleCollisionLeave = func(res *resolv.Collision, o, other *core.Object) {
 		switch v := other.UserData.(type) {
 		case *player:
+			v.ctrl.IsGettingOnLadder = false
 			v.ctrl.IsOnLadder = false
 		}
 	}
