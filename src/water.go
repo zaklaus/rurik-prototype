@@ -21,6 +21,8 @@ const (
 	waterParticleSpreadFactor    float32 = 3
 	waterParticleSplashForce     float32 = 2
 	waterParticleEnableCollision bool    = true
+	waterParticleMinCount        int     = 6
+	waterParticleMaxCount        int     = 14
 )
 
 var (
@@ -108,7 +110,7 @@ func NewWater(o *core.Object) {
 
 		for ; y < waterEdge; y++ {
 			for x = 0; x < w.gridWidth; x++ {
-				if rand.Int()%7 == 0 {
+				if rand.Int()%19 == 0 {
 					w.drawWaterTile(o, x, y)
 				}
 			}
@@ -224,7 +226,7 @@ func (w *water) updateWater() {
 func pushWaterParticle(world *core.World, origin rl.Vector2) {
 	part := waterParticle{}
 
-	numParts := 3 + rand.Int()%7
+	numParts := waterParticleMinCount + rand.Int()%int(waterParticleMaxCount-waterParticleMinCount)
 
 	for i := 0; i < numParts; i++ {
 		pos := origin
