@@ -136,6 +136,7 @@ func NewWater(o *core.Object) {
 	}
 
 	o.HandleCollisionLeave = func(res *resolv.Collision, o, other *core.Object) {
+		pushWaterParticle(o.GetWorld(), other.Position)
 		switch v := other.UserData.(type) {
 		case *player:
 			v.ctrl.IsInWater = false
@@ -151,13 +152,15 @@ func (w *water) drawWaterTile(o *core.Object, x, y int32) {
 	} else if en < -1 {
 		en = 0
 	}
-	col := raymath.Vector3Lerp(core.ColorToVec3(waterCalm), core.ColorToVec3(waterWild), en)
+	colV := raymath.Vector3Lerp(core.ColorToVec3(waterCalm), core.ColorToVec3(waterWild), en)
+	col := core.Vec3ToColor(colV)
+	col.A = 120
 	rl.DrawRectangle(
 		int32(o.Position.X)+int32(x*waterTileSize),
 		int32(o.Position.Y)+int32(y*waterTileSize),
 		waterTileSize,
 		waterTileSize,
-		core.Vec3ToColor(col),
+		col,
 	)
 }
 
@@ -293,6 +296,7 @@ func drawWaterParticles() {
 		for idx := 0; idx < len(v.position); idx++ {
 			p := v.position[idx]
 			c := v.color[idx]
+			c.A = 120
 			rl.DrawRectangle(
 				int32(p.X)-2,
 				int32(p.Y)-2,
