@@ -130,25 +130,9 @@ func NewWater(o *core.Object) {
 
 	o.HandleCollisionEnter = func(res *resolv.Collision, o, other *core.Object) {
 		pushWaterParticle(o.GetWorld(), other.Position)
-
-		switch v := other.UserData.(type) {
-		case *player:
-			v.ctrl.IsInWater = true
-		case *ball:
-			v.IsInWater = true
-		}
 	}
 
-	o.HandleCollisionLeave = func(res *resolv.Collision, o, other *core.Object) {
-		pushWaterParticle(o.GetWorld(), other.Position)
-
-		switch v := other.UserData.(type) {
-		case *player:
-			v.ctrl.IsInWater = false
-		case *ball:
-			v.IsInWater = false
-		}
-	}
+	o.HandleCollisionLeave = o.HandleCollisionEnter
 }
 
 func (w *water) drawWaterTile(o *core.Object, x, y int32) {

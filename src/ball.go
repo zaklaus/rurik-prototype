@@ -75,4 +75,18 @@ func NewBall(o *core.Object) {
 		a.Movement.X += -v.X * absFloat(b.Movement.X)
 		a.Movement.Y += -v.Y * absFloat(b.Movement.Y)
 	}
+
+	o.HandleCollisionEnter = func(res *resolv.Collision, o, other *core.Object) {
+		switch other.Class {
+		case "water":
+			o.UserData.(*ball).IsInWater = true
+		}
+	}
+
+	o.HandleCollisionLeave = func(res *resolv.Collision, o, other *core.Object) {
+		switch other.Class {
+		case "water":
+			o.UserData.(*ball).IsInWater = false
+		}
+	}
 }

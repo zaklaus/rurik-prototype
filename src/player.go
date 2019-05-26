@@ -52,6 +52,24 @@ func NewPlayer(p *core.Object) {
 	}
 
 	p.UserData = plr
+
+	p.HandleCollisionEnter = func(res *resolv.Collision, o, other *core.Object) {
+		switch other.Class {
+		case "water":
+			o.UserData.(*player).ctrl.IsInWater = true
+		case "ladder":
+			o.UserData.(*player).ctrl.IsOnLadder = true
+		}
+	}
+
+	p.HandleCollisionLeave = func(res *resolv.Collision, o, other *core.Object) {
+		switch other.Class {
+		case "water":
+			o.UserData.(*player).ctrl.IsInWater = false
+		case "ladder":
+			o.UserData.(*player).ctrl.IsOnLadder = false
+		}
+	}
 }
 
 func finishPlayer(p *core.Object) {}
