@@ -35,4 +35,5 @@ func registerClasses() {
 	core.RegisterClass("player", NewPlayer)
 	core.RegisterClass("water", NewWater)
 	core.RegisterClass("ladder", NewLadder)
+	core.RegisterClass("ball", NewBall)
 }

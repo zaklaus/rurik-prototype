@@ -4,4 +4,7 @@ all:
 play:
 	./build/game.exe
 
+perf:
+	go tool pprof --pdf build/cpu.pprof > build/shit.pdf
+
 bt: all play

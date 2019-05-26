@@ -30,6 +30,10 @@ func initLevels() {
 			mapName: "movement",
 		},
 		level{
+			title:   "Water particles",
+			mapName: "water",
+		},
+		level{
 			title:   "Exit game",
 			mapName: "$exitGame",
 		},

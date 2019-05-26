@@ -6,12 +6,8 @@ import (
 )
 
 type characterController struct {
-	Object            *core.Object
-	IsGrounded        bool
-	IsFalling         bool
-	IsInWater         bool
-	IsOnLadder        bool
-	IsGettingOnLadder bool
+	Object *core.Object
+	physicsProps
 }
 
 func (c *characterController) move(factor float32) {

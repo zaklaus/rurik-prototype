@@ -134,14 +134,19 @@ func NewWater(o *core.Object) {
 		switch v := other.UserData.(type) {
 		case *player:
 			v.ctrl.IsInWater = true
+		case *ball:
+			v.IsInWater = true
 		}
 	}
 
 	o.HandleCollisionLeave = func(res *resolv.Collision, o, other *core.Object) {
 		pushWaterParticle(o.GetWorld(), other.Position)
+
 		switch v := other.UserData.(type) {
 		case *player:
 			v.ctrl.IsInWater = false
+		case *ball:
+			v.IsInWater = false
 		}
 	}
 }
@@ -230,8 +235,9 @@ func pushWaterParticle(world *core.World, origin rl.Vector2) {
 
 	for i := 0; i < numParts; i++ {
 		pos := origin
+		posx := float32(i) / float32(numParts-1)
 		dir := rl.Vector2{
-			X: (rand.Float32()*2 - 1) * waterParticleSpreadFactor,
+			X: (posx*2 - 1) * waterParticleSpreadFactor,
 			Y: -waterParticleSplashForce,
 		}
 		col := core.Vec3ToColor(raymath.Vector3Lerp(core.ColorToVec3(waterCalm), core.ColorToVec3(waterWild), rand.Float32()))
@@ -255,10 +261,10 @@ func updateWaterParticles() {
 			p := &v.position[idx]
 			d := &v.direction[idx]
 
-			dy := d.Y
-			dx := d.X
+			dy := float32(core.RoundFloatToInt32(d.Y))
+			dx := float32(core.RoundFloatToInt32(d.X))
 
-			if waterParticleEnableCollision {
+			if waterParticleEnableCollision && rand.Int()%3 == 0 {
 				rect := rl.RectangleInt32{
 					X:      core.RoundFloatToInt32(p.X),
 					Y:      core.RoundFloatToInt32(p.Y),
@@ -268,12 +274,12 @@ func updateWaterParticles() {
 
 				if res, _ := core.CheckForCollisionRectangle(v.world, rect, "solid+slope", int32(dx), 0); res.Colliding() && !res.Teleporting {
 					dx = float32(res.ResolveX)
-					d.X = 0
+					d.X = float32(-res.ResolveX) / 2
 				}
 
 				if res, _ := core.CheckForCollisionRectangle(v.world, rect, "solid+slope", 0, int32(dy)+4); res.Colliding() && !res.Teleporting {
 					dy = float32(res.ResolveY)
-					d.Y = 0
+					d.Y = float32(-res.ResolveY) / 4
 				}
 			}
 

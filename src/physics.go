@@ -11,3 +11,11 @@ const (
 	movementSmoothingFactor float32 = 0.22
 	movementFallSpeedFactor float32 = 0.25
 )
+
+type physicsProps struct {
+	IsGrounded        bool
+	IsFalling         bool
+	IsInWater         bool
+	IsOnLadder        bool
+	IsGettingOnLadder bool
+}

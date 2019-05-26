@@ -5,3 +5,4 @@ version: v1
 desc: Maps used in the game for development purposes
 chunks:
 - file: map/movement/movement.tmx
+- file: map/water/water.tmx

@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/gob"
 	"math"
+	"math/rand"
+	"time"
 
 	rl "github.com/zaklaus/raylib-go/raylib"
 	"github.com/zaklaus/rurik/src/core"
@@ -31,6 +33,8 @@ func (g *gameMode) Init() {
 func (g *gameMode) Shutdown() {}
 
 func (g *gameMode) Update() {
+	rand.Seed(int64(time.Now().Nanosecond()))
+
 	switch g.playState {
 	case statePaused:
 		if rl.IsKeyPressed(rl.KeyEscape) {
@@ -75,8 +79,9 @@ func (g *gameMode) Update() {
 			g.playState = statePaused
 		}
 
-		if rl.IsKeyPressed(rl.KeyF1) {
-			g.showHelpScreen = !g.showHelpScreen
+		if rl.IsKeyPressed(rl.KeyF5) {
+			core.FlushMaps()
+			g.playLevelSelection()
 		}
 	}
 }
