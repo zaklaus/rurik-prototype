@@ -11,8 +11,6 @@ import (
 	"github.com/zaklaus/rurik/src/system"
 )
 
-const ()
-
 type player struct {
 	ctrl *characterController
 }

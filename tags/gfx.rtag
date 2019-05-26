@@ -6,3 +6,4 @@ desc: Graphics assets used in Darkorbia
 chunks:
 - file: gfx/player.json
 - file: gfx/player.png
+- file: gfx/gamehud.png

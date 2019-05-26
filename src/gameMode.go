@@ -26,6 +26,7 @@ const (
 
 func (g *gameMode) Init() {
 	initLevels()
+	initHUD()
 
 	g.playState = stateLevelSelection
 }
@@ -69,6 +70,7 @@ func (g *gameMode) Update() {
 
 	case statePlay:
 		core.UpdateMaps()
+		updateHUD()
 		updateDialogue()
 		updateNotifications()
 
@@ -127,6 +129,7 @@ func (g *gameMode) DrawUI() {
 
 	case statePlay:
 		core.DrawMapUI()
+		drawHUD()
 		drawDialogue()
 		drawNotifications()
 	}
