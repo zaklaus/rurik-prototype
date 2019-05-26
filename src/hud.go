@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"math/rand"
 
@@ -11,11 +10,17 @@ import (
 )
 
 const (
-	frameWidth    = 52
-	frameHeight   = 20
-	frameDestPosX = 5
-	frameDestPosY = 15
-	frameScaling  = 2
+	frameWidth           = 52
+	frameHeight          = 20
+	frameSrcPosX         = 0
+	frameSrcPosY         = 0
+	frameDestPosX        = 5
+	frameDestPosY        = 15
+	frameScaling         = 2.75
+	frameOverlayPosX     = 6
+	frameOverlayPosY     = 64
+	frameOverlayDestPosX = 5
+	frameOverlayDestPosY = 9
 
 	valueUpdatePauseTime = 0.3
 	valueUpdateTime      = 0.4
@@ -87,7 +92,7 @@ func initHUD() {
 
 func drawHUD() {
 	{
-		frameRect := rl.NewRectangle(0, 0, frameWidth, frameHeight)
+		frameRect := rl.NewRectangle(frameSrcPosX, frameSrcPosY, frameWidth, frameHeight)
 		frameDestRect := rl.NewRectangle(frameDestPosX, frameDestPosY, frameWidth*frameScaling, frameHeight*frameScaling)
 		rl.DrawTexturePro(
 			*hudTexture,
@@ -141,7 +146,24 @@ func drawHUD() {
 			0,
 			rl.White,
 		)
+	}
 
+	if 0 == 1 {
+		frameRect := rl.NewRectangle(frameOverlayPosX, frameOverlayPosY, frameWidth, frameHeight)
+		frameDestRect := rl.NewRectangle(
+			frameDestPosX+frameOverlayDestPosX*frameScaling,
+			frameDestPosY+frameOverlayDestPosY*frameScaling,
+			frameWidth*frameScaling,
+			frameHeight*frameScaling,
+		)
+		rl.DrawTexturePro(
+			*hudTexture,
+			frameRect,
+			frameDestRect,
+			rl.Vector2{},
+			0,
+			rl.White,
+		)
 	}
 }
 
@@ -176,7 +198,6 @@ func updateHUD() {
 				if v.ValueUpdateDelayTime < 0 {
 					v.ValueUpdateDelayTime = 0
 				}
-				fmt.Println(v)
 			}
 
 			if v.ValueUpdateDelayTime == 0 && v.ValueUpdateTime > 0 {

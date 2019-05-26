@@ -22,7 +22,7 @@ const (
 	waterParticleSplashForce     float32 = 2
 	waterParticleEnableCollision bool    = true
 	waterParticleMinCount        int     = 6
-	waterParticleMaxCount        int     = 14
+	waterParticleMaxCount        int     = 10
 )
 
 var (
@@ -53,7 +53,7 @@ func (w *water) Deserialize(dec *gob.Decoder) {}
 // NewWater water
 func NewWater(o *core.Object) {
 	o.IsCollidable = true
-	o.CollisionType = "trigger"
+	o.CollisionType = core.CollisionTrigger
 	o.Size = []int32{int32(o.Meta.Width), int32(o.Meta.Height)}
 	o.DebugVisible = false
 	o.IsOverlay = true
@@ -272,12 +272,12 @@ func updateWaterParticles() {
 					Height: 1,
 				}
 
-				if res, _ := core.CheckForCollisionRectangle(v.world, rect, "solid+slope", int32(dx), 0); res.Colliding() && !res.Teleporting {
+				if res, _ := core.CheckForCollisionRectangle(v.world, rect, []uint32{core.CollisionSolid, core.CollisionSlope}, int32(dx), 0); res.Colliding() && !res.Teleporting {
 					dx = float32(res.ResolveX)
 					d.X = float32(-res.ResolveX) / 2
 				}
 
-				if res, _ := core.CheckForCollisionRectangle(v.world, rect, "solid+slope", 0, int32(dy)+4); res.Colliding() && !res.Teleporting {
+				if res, _ := core.CheckForCollisionRectangle(v.world, rect, []uint32{core.CollisionSolid, core.CollisionSlope}, 0, int32(dy)+4); res.Colliding() && !res.Teleporting {
 					dy = float32(res.ResolveY)
 					d.Y = float32(-res.ResolveY) / 4
 				}

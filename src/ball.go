@@ -23,7 +23,7 @@ func NewBall(o *core.Object) {
 	o.IsCollidable = true
 	o.Size = []int32{int32(o.Meta.Width), int32(o.Meta.Height)}
 	o.GetAABB = core.GetSolidAABB
-	o.CollisionType = "solid"
+	o.CollisionType = core.CollisionRigid
 	o.DebugVisible = true
 	o.UserData = &ball{}
 
@@ -51,14 +51,14 @@ func NewBall(o *core.Object) {
 		dx := core.RoundFloat(o.Movement.X)
 		dy := core.RoundFloat(o.Movement.Y)
 
-		if res, _ := core.CheckForCollisionEx("solid+trigger+pawn", o, core.RoundFloatToInt32(dx), 0); res.Colliding() && !res.Teleporting {
+		if res, _ := core.CheckForCollisionEx([]uint32{core.CollisionSolid, core.CollisionTrigger, collisionPawn}, o, core.RoundFloatToInt32(dx), 0); res.Colliding() && !res.Teleporting {
 			dx = float32(res.ResolveX)
 			o.Movement.X = 0
 		}
 
-		core.CheckForCollisionEx("trigger", o, 0, 4)
+		core.CheckForCollisionEx([]uint32{core.CollisionTrigger}, o, 0, 4)
 
-		if res, _ := core.CheckForCollisionEx("solid", o, 0, core.RoundFloatToInt32(dy)); res.Colliding() && !res.Teleporting {
+		if res, _ := core.CheckForCollisionEx([]uint32{core.CollisionSolid}, o, 0, core.RoundFloatToInt32(dy)); res.Colliding() && !res.Teleporting {
 			diff := float32(res.ResolveY)
 			dy = -diff
 			o.Movement.Y = 0

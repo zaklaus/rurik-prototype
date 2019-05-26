@@ -13,6 +13,10 @@ const (
 	windowH = 900
 )
 
+const (
+	collisionPawn uint32 = core.FirstCollisionType
+)
+
 func main() {
 	gm := &gameMode{}
 
@@ -21,6 +25,7 @@ func main() {
 	core.InitCore("Darkorbia", windowW, windowH, screenW, screenH)
 	registerClasses()
 	registerInputActions()
+	registerCollisionTypes()
 	core.Run(gm, true)
 }
 
@@ -29,6 +34,10 @@ func registerInputActions() {
 		AllKeys:    []int32{rl.KeySpace},
 		JoyButtons: []int32{rl.GamepadXboxButtonA},
 	})
+}
+
+func registerCollisionTypes() {
+	core.AddCollisionType("pawn", collisionPawn)
 }
 
 func registerClasses() {

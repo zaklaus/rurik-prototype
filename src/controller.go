@@ -55,7 +55,7 @@ func (c *characterController) down() {
 func (c *characterController) update() {
 	// Handle free fall
 	{
-		down, _ := core.CheckForCollisionEx("*", c.Object, 0, 4)
+		down, _ := core.CheckForCollisionEx([]uint32{}, c.Object, 0, 4)
 		c.IsGrounded = down.Colliding()
 		if !c.IsGrounded && !c.IsInWater && !c.IsOnLadder {
 			g := gravity
@@ -74,18 +74,18 @@ func (c *characterController) update() {
 	// Handle collision
 	{
 		// Handle slope movement
-		if res, _ := core.CheckForCollisionEx("slope", c.Object, core.RoundFloatToInt32(x), core.RoundFloatToInt32(y)+4); res.Colliding() {
+		if res, _ := core.CheckForCollisionEx([]uint32{core.CollisionSlope}, c.Object, core.RoundFloatToInt32(x), core.RoundFloatToInt32(y)+4); res.Colliding() {
 			y = core.RoundInt32ToFloat(res.ResolveY)
 			c.Object.Movement.Y = 0
 		}
 
 		// Handle solid+trigger collisions
-		if res, _ := core.CheckForCollisionEx("solid+trigger", c.Object, core.RoundFloatToInt32(x), 0); res.Colliding() && !res.Teleporting {
+		if res, _ := core.CheckForCollisionEx([]uint32{core.CollisionSolid, core.CollisionTrigger}, c.Object, core.RoundFloatToInt32(x), 0); res.Colliding() && !res.Teleporting {
 			x = core.RoundInt32ToFloat(res.ResolveX)
 			c.Object.Movement.X = 0
 		}
 
-		if res, _ := core.CheckForCollisionEx("solid+trigger", c.Object, 0, core.RoundFloatToInt32(y)); res.Colliding() && !res.Teleporting {
+		if res, _ := core.CheckForCollisionEx([]uint32{core.CollisionSolid, core.CollisionTrigger}, c.Object, 0, core.RoundFloatToInt32(y)); res.Colliding() && !res.Teleporting {
 			y = core.RoundInt32ToFloat(res.ResolveY)
 			c.Object.Movement.Y = 0
 		}

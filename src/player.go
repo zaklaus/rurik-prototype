@@ -34,7 +34,7 @@ func NewPlayer(p *core.Object) {
 	p.GetAABB = core.GetSpriteAABB
 	p.HandleCollision = handlePlayerCollision
 	p.Facing = rl.NewVector2(1, 0)
-	p.CollisionType = "pawn"
+	p.CollisionType = collisionPawn
 	p.IsCollidable = true
 	p.Finish = finishPlayer
 	p.InsideArea = func(o, area *core.Object) bool {

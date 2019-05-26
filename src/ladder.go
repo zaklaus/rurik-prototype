@@ -10,9 +10,9 @@ type ladder struct{}
 // NewLadder ladder
 func NewLadder(o *core.Object) {
 	o.IsCollidable = true
-	o.CollisionType = "trigger"
+	o.CollisionType = core.CollisionTrigger
 	o.Size = []int32{int32(o.Meta.Width), int32(o.Meta.Height)}
-	o.DebugVisible = false
+	o.DebugVisible = true
 
 	o.GetAABB = core.GetSolidAABB
 
