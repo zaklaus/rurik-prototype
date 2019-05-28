@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/solarlune/resolv/resolv"
+	"github.com/zaklaus/resolv/resolv"
 	"github.com/zaklaus/rurik/src/core"
 )
 

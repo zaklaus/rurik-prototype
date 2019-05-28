@@ -5,9 +5,9 @@ import (
 
 	"github.com/zaklaus/rurik/src/core"
 
-	"github.com/solarlune/resolv/resolv"
 	rl "github.com/zaklaus/raylib-go/raylib"
 	ry "github.com/zaklaus/raylib-go/raymath"
+	"github.com/zaklaus/resolv/resolv"
 	"github.com/zaklaus/rurik/src/system"
 )
 
@@ -98,14 +98,12 @@ func updatePlayer(p *core.Object, dt float32) {
 		return
 	}
 
-	var tag string
+	tag := "Stand"
 
 	if ry.Vector2Length(p.Movement) > 0 {
 		p.Facing.X = core.SignFloat(p.Movement.X)
 
-		tag = "Walk"
-	} else {
-		tag = "Stand"
+		//tag = "Walk"
 	}
 
 	if p.Facing.X > 0 {

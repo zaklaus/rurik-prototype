@@ -148,7 +148,7 @@ func drawHUD() {
 		)
 	}
 
-	if 0 == 1 {
+	if false {
 		frameRect := rl.NewRectangle(frameOverlayPosX, frameOverlayPosY, frameWidth, frameHeight)
 		frameDestRect := rl.NewRectangle(
 			frameDestPosX+frameOverlayDestPosX*frameScaling,
