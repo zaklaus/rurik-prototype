@@ -8,6 +8,7 @@ QRC:
 
 Message: 1010
 You're running dangerously low on health! Use stimpak to heal yourself!
+Make sure you get at least %requiredHealCount% shots!
 
 Message: 1015
 Hey! You should already apply your stimpak!

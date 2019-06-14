@@ -325,7 +325,7 @@ func questInitBaseCommands(q *questManager) {
 			return questCommandErrorThing("say", "message", qs, qt, args[0])
 		}
 
-		qs.printf(qt, "temp saying[%s]: %s", args[0], res.content)
+		qs.printf(qt, "temp saying[%s]: %s", args[0], qs.processText(res.content))
 
 		return true
 	})
@@ -336,7 +336,17 @@ func questInitBaseCommands(q *questManager) {
 	})
 
 	q.registerCommand("give", func(qs *quest, qt *questTask, args []string) bool {
-		qs.printf(qt, "giving something")
+		if len(args) != 2 {
+			return questCommandErrorArgCount("give", qs, qt, len(args), 2)
+		}
+
+		amount, ok := qs.getNumberOrVariable(args[1])
+
+		if !ok {
+			return questCommandErrorArgType("give", qs, qt, args[1], "string", "integer")
+		}
+
+		qs.printf(qt, "giving %d of %s", amount, args[0])
 		return true
 	})
 }
@@ -378,6 +388,14 @@ func (qs *quest) getNumberOrVariable(arg string) (int, bool) {
 	}
 
 	return val, true
+}
+
+func (qs *quest) processText(content string) string {
+	for k, v := range qs.variables {
+		content = strings.ReplaceAll(content, fmt.Sprintf("%%%s%%", k), strconv.Itoa(v))
+	}
+
+	return content
 }
 
 func (qs *quest) resolveVariables(expr string) string {
