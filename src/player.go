@@ -31,7 +31,7 @@ func NewPlayer(p *core.Object) {
 	p.Size = []int32{p.Ase.FrameWidth, p.Ase.FrameHeight}
 	p.Update = updatePlayer
 	p.Draw = drawPlayer
-	p.GetAABB = core.GetSpriteAABB
+	p.GetAABB = getFixedSpriteAABB
 	p.HandleCollision = handlePlayerCollision
 	p.Facing = rl.NewVector2(1, 0)
 	p.CollisionType = collisionPawn
@@ -41,6 +41,7 @@ func NewPlayer(p *core.Object) {
 		return system.IsKeyPressed("use")
 	}
 	p.CanTrigger = true
+	p.DebugVisible = true
 
 	core.LocalPlayer = p
 

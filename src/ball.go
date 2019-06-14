@@ -52,16 +52,13 @@ func NewBall(o *core.Object) {
 		dy := core.RoundFloat(o.Movement.Y)
 
 		if res, _ := core.CheckForCollisionEx([]uint32{core.CollisionSolid, core.CollisionTrigger, collisionPawn}, o, core.RoundFloatToInt32(dx), 0); res.Colliding() && !res.Teleporting {
-			dx = float32(res.ResolveX)
-			o.Movement.X = 0
+			dx, o.Movement.X = calculateContactResponse(&v.physicsProps, res.ResolveX)
 		}
 
 		core.CheckForCollisionEx([]uint32{core.CollisionTrigger}, o, 0, 4)
 
 		if res, _ := core.CheckForCollisionEx([]uint32{core.CollisionSolid}, o, 0, core.RoundFloatToInt32(dy)); res.Colliding() && !res.Teleporting {
-			diff := float32(res.ResolveY)
-			dy = -diff
-			o.Movement.Y = 0
+			dy, o.Movement.Y = calculateContactResponse(&v.physicsProps, res.ResolveY)
 		}
 
 		o.Position.X += dx

@@ -20,7 +20,7 @@ const (
 func main() {
 	gm := &gameMode{}
 
-	registerClasses()
+	rl.SetTraceLog(0)
 
 	core.InitCore("Darkorbia", windowW, windowH, screenW, screenH)
 	registerClasses()

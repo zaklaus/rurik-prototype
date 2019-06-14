@@ -75,19 +75,16 @@ func (c *characterController) update() {
 	{
 		// Handle slope movement
 		if res, _ := core.CheckForCollisionEx([]uint32{core.CollisionSlope}, c.Object, core.RoundFloatToInt32(x), core.RoundFloatToInt32(y)+4); res.Colliding() {
-			y = core.RoundInt32ToFloat(res.ResolveY)
-			c.Object.Movement.Y = 0
+			y, c.Object.Movement.Y = calculateContactResponse(&c.physicsProps, res.ResolveY)
 		}
 
 		// Handle solid+trigger collisions
 		if res, _ := core.CheckForCollisionEx([]uint32{core.CollisionSolid, core.CollisionTrigger}, c.Object, core.RoundFloatToInt32(x), 0); res.Colliding() && !res.Teleporting {
-			x = core.RoundInt32ToFloat(res.ResolveX)
-			c.Object.Movement.X = 0
+			x, c.Object.Movement.X = calculateContactResponse(&c.physicsProps, res.ResolveX)
 		}
 
 		if res, _ := core.CheckForCollisionEx([]uint32{core.CollisionSolid, core.CollisionTrigger}, c.Object, 0, core.RoundFloatToInt32(y)); res.Colliding() && !res.Teleporting {
-			y = core.RoundInt32ToFloat(res.ResolveY)
-			c.Object.Movement.Y = 0
+			y, c.Object.Movement.Y = calculateContactResponse(&c.physicsProps, res.ResolveY)
 		}
 
 		// Apply motion

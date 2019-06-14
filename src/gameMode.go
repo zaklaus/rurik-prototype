@@ -15,6 +15,7 @@ type gameMode struct {
 	playState      int
 	textWave       int32
 	showHelpScreen bool
+	quests         questManager
 }
 
 const (
@@ -73,6 +74,7 @@ func (g *gameMode) Update() {
 		updateHUD()
 		updateDialogue()
 		updateNotifications()
+		g.quests.processQuests()
 
 		/* particle systems */
 		updateWaterParticles()
@@ -89,7 +91,9 @@ func (g *gameMode) Update() {
 }
 
 func (g *gameMode) Serialize(enc *gob.Encoder) {
-	data := demoGameSaveData{}
+	data := demoGameSaveData{
+		quests: g.quests,
+	}
 
 	enc.Encode(data)
 }
@@ -97,10 +101,12 @@ func (g *gameMode) Serialize(enc *gob.Encoder) {
 func (g *gameMode) Deserialize(dec *gob.Decoder) {
 	var saveData demoGameSaveData
 	dec.Decode(&saveData)
+
+	g.quests = saveData.quests
 }
 
 type demoGameSaveData struct {
-	ObjectCounter int
+	quests questManager
 }
 
 func (g *gameMode) Draw() {

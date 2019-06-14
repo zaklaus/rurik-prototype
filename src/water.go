@@ -33,10 +33,11 @@ var (
 )
 
 type water struct {
-	gridWidth  int32
-	gridHeight int32
-	gridSize   int32
-	energy     []float32
+	gridWidth   int32
+	gridHeight  int32
+	gridSize    int32
+	waveHeights [waterVertexCount]float32
+	energy      []float32
 }
 
 type waterParticle struct {
@@ -107,12 +108,13 @@ func NewWater(o *core.Object) {
 		var x int32
 
 		var waterEdge int32 = 1
+		//var waveVertexMargin int32 = int32(float32(o.Meta.Width) / float32(waterVertexCount))
 
 		for ; y < waterEdge; y++ {
 			for x = 0; x < w.gridWidth; x++ {
-				if rand.Int()%19 == 0 {
-					w.drawWaterTile(o, x, y)
-				}
+				//col := w.getTileColor(x, y)
+				w.drawWaterTile(o, x, y)
+				//rl.DrawLineEx()
 			}
 			x = 0
 		}
@@ -132,10 +134,9 @@ func NewWater(o *core.Object) {
 		pushWaterParticle(o.GetWorld(), other.Position)
 	}
 
-	o.HandleCollisionLeave = o.HandleCollisionEnter
 }
 
-func (w *water) drawWaterTile(o *core.Object, x, y int32) {
+func (w *water) getTileColor(x, y int32) rl.Color {
 	idx := (y * w.gridWidth) + x
 	en := w.energy[idx]
 	if en > 1 {
@@ -146,6 +147,11 @@ func (w *water) drawWaterTile(o *core.Object, x, y int32) {
 	colV := raymath.Vector3Lerp(core.ColorToVec3(waterCalm), core.ColorToVec3(waterWild), en)
 	col := core.Vec3ToColor(colV)
 	col.A = 120
+	return col
+}
+
+func (w *water) drawWaterTile(o *core.Object, x, y int32) {
+	col := w.getTileColor(x, y)
 	rl.DrawRectangle(
 		int32(o.Position.X)+int32(x*waterTileSize),
 		int32(o.Position.Y)+int32(y*waterTileSize),
