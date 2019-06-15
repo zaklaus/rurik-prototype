@@ -127,8 +127,8 @@ func questInitBaseCommands(q *questManager) {
 	})
 
 	q.registerCommand("timer", func(qs *quest, qt *questTask, args []string) bool {
-		if len(args) != 3 {
-			return questCommandErrorArgCount("timer", qs, qt, len(args), 3)
+		if len(args) != 2 {
+			return questCommandErrorArgCount("timer", qs, qt, len(args), 2)
 		}
 
 		duration, ok := qs.getNumberOrVariable(args[1])
@@ -137,14 +137,8 @@ func questInitBaseCommands(q *questManager) {
 			return questCommandErrorArgType("timer", qs, qt, args[1], "string", "integer")
 		}
 
-		startTime, ok2 := qs.getNumberOrVariable(args[2])
-
-		if !ok2 {
-			return questCommandErrorArgType("timer", qs, qt, args[2], "string", "integer")
-		}
-
 		qs.timers[args[0]] = questTimer{
-			time:     float32(startTime),
+			time:     -1,
 			duration: float32(duration),
 		}
 
@@ -237,6 +231,24 @@ func questInitBaseCommands(q *questManager) {
 
 		qs.printf(qt, "timer '%s' was fired!", args[0])
 		tm.time = tm.duration
+		qs.timers[args[0]] = tm
+
+		return true
+	})
+
+	q.registerCommand("stop", func(qs *quest, qt *questTask, args []string) bool {
+		if len(args) != 1 {
+			return questCommandErrorArgCount("stop", qs, qt, len(args), 1)
+		}
+
+		tm, ok := qs.timers[args[0]]
+
+		if !ok {
+			return questCommandErrorThing("stop", "timer", qs, qt, args[0])
+		}
+
+		qs.printf(qt, "timer '%s' was stopped!", args[0])
+		tm.time = -1
 		qs.timers[args[0]] = tm
 
 		return true
@@ -453,17 +465,15 @@ func (qs *quest) setVariable(name string, val int) {
 
 func (qs *quest) processTimers() {
 	for k, v := range qs.timers {
-		if v.time < 0 {
-			continue
+		if v.time >= 0 {
+			v.time -= system.FrameTime
+
+			if v.time < 0 {
+				v.time = 0
+			}
+
+			qs.timers[k] = v
 		}
-
-		v.time -= system.FrameTime
-
-		if v.time < 0 {
-			v.time = 0
-		}
-
-		qs.timers[k] = v
 
 		qs.setVariable(k, int(core.RoundFloatToInt32(v.time)))
 	}

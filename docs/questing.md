@@ -79,12 +79,14 @@ The game offers the following commands usable by the system:
 - `setvar [name] [number]`
     Sets a value to a variable
 
-- `timer [name] [duration] [start]`
-    Sets up a new timer with a specified duration. The `start` argument specifies the initial remaining time. If `start` is `-1`, the timer won't be done until after it is fired
+- `timer [name] [duration]`
+    Sets up a new timer with a specified duration
 - `fire [name]`
     Fires a timer. It sets the remaining time to the initial timer's duration
 - `done [name]`
     Checks whether the timer is already expired, blocks execution if not
+- `stop [name]`
+    Interrupts a timer
 
 - `stage [resourceID]`
     Adds a new stage to the quest's journal
@@ -125,26 +127,29 @@ MESSAGE: 1010
 Quest has been completed!
 
 MESSAGE: 1015
-Remaining time is %_EveryThreeSeconds_%!
+Remaining time is %_WaitForCompletion_%!
 
 STAGE: 2000
 Wait 10 seconds for completion
 
 QST:
 
-timer _WaitForCompletion_ 10 -1
-timer _EveryThreeSeconds_ 3 0
+timer _WaitForCompletion_ 10
+timer _EveryThreeSeconds_ 3
 
 task _S.00_:
     say 1000
     stage 2000
     fire _WaitForCompletion_
+    fire _EveryThreeSeconds_
     done _WaitForCompletion_
 
 task _S.01_:
     when _S.00_
     say 1010
     stdone 2000
+    stop _EveryThreeSeconds_
+    finish
 
 task _CallEveryThreeSeconds_:
     done _EveryThreeSeconds_

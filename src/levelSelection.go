@@ -118,7 +118,8 @@ func (g *gameMode) updateLevelSelection() {
 		g.quests = newQuestManager()
 
 		//temp
-		g.quests.addQuest("TEST0", nil)
+		//g.quests.addQuest("TEST0", nil)
+		g.quests.addQuest("EXAMPLE", nil)
 	}
 }
 

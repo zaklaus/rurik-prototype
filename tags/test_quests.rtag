@@ -5,3 +5,4 @@ version: v1
 desc: Quests used for testing purposes
 chunks:
 - file: quests/test0.qst
+- file: quests/example.qst
