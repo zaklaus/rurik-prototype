@@ -139,6 +139,15 @@ func (p *questParser) parseToken() questToken {
 	al := p.allowWhitespace
 	brc := 0
 
+	if p.textPos < len(p.data)-2 &&
+		string(p.data[p.textPos:p.textPos+2]) == kwComment {
+		for r := p.peekChar(); r != 0 && r != '\n'; r = p.peekChar() {
+			p.nextChar()
+		}
+
+		p.nextChar()
+	}
+
 	if string(p.peekChar()) == kwLeftBrace {
 		p.allowWhitespace = true
 	}

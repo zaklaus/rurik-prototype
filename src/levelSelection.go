@@ -114,8 +114,8 @@ func (g *gameMode) updateLevelSelection() {
 	}
 
 	if system.IsKeyPressed("use") {
-		g.playLevelSelection()
 		g.quests.quests = []quest{}
+		g.playLevelSelection()
 
 		//temp
 		// g.quests.addQuest("TEST0", nil)

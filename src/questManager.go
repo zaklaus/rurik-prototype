@@ -1,6 +1,8 @@
 package main
 
-import "log"
+import (
+	"log"
+)
 
 const (
 	maxQuests = 5
@@ -55,14 +57,20 @@ func (q *questManager) addQuest(tplName string, details map[string]int) (bool, s
 		details = map[string]int{}
 	}
 
-	q.quests = append(q.quests, quest{
+	qn := quest{
 		name:      tplName,
 		questDef:  *qd,
 		state:     qsInProgress,
 		variables: details,
 		timers:    map[string]questTimer{},
 		stages:    map[int]questStage{},
-	})
+	}
+
+	for _, v := range qn.tasks {
+		qn.setVariable(v.name, 0)
+	}
+
+	q.quests = append(q.quests, qn)
 
 	log.Printf("Quest '%s' with title '%s' has been added!", tplName, qd.title)
 
