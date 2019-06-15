@@ -82,6 +82,8 @@ The game offers the following commands usable by the system:
     Declares a new variable
 - `setvar [name] [number]`
     Sets a value to a variable
+- `when [lhs] <above/below/equals/!equals> [rhs]`
+    Checks a condition and decides whether to pause the task execution or continue
 
 - `timer [name] [duration]`
     Sets up a new timer with a specified duration
@@ -113,6 +115,24 @@ Experimental commands:
     Plays a sound from a sequence
 - `give [item] [amount]`
     Gives an item of a specified amount
+
+Event commands:
+- `pop [variable]`
+    Pops a value from a stack and stores it to a variable
+
+### Naming guidelines
+
+We use the following guidelines for naming things:
+
+Variables:
+- `_GlobalVar_` for global variables linked to the game
+- `@R` for registers using single letter A-Z
+- `localVar` for local variables used internally by the quest
+- `#remote.var` for variables declared outside of the quest. These are usually exported values given to us by the game
+
+Tasks:
+- `_S.NN_` where NN is a stage number, to signify staged tasks, they are written in order and act as a sequence
+- `_GlobalTask_` for other tasks, reminders or special events. These don't contribute to the quest story but enhance it with perksk or act as utility tasks
 
 ### Example quest
 
