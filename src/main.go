@@ -26,11 +26,11 @@ func main() {
 
 	rl.SetTraceLog(0)
 
+	core.InitUserEvents = registerEvents
 	core.InitCore("Darkorbia", windowW, windowH, screenW, screenH)
 	registerClasses()
 	registerInputActions()
 	registerCollisionTypes()
-	registerEvents()
 	core.Run(currentGameMode, true)
 }
 
@@ -48,12 +48,28 @@ func registerCollisionTypes() {
 func registerEvents() {
 	core.RegisterNative("quest", func(jsData core.InvokeData) interface{} {
 		var data struct {
-			name string
-			args []int
+			Name string
+			Args []int64
 		}
 		core.DecodeInvokeData(&data, jsData)
 
-		currentGameMode.quests.callEvent(data.name, data.args)
+		args := []int{}
+
+		for _, x := range data.Args {
+			args = append(args, int(x))
+		}
+
+		currentGameMode.quests.callEvent(data.Name, args)
+		return nil
+	})
+
+	core.RegisterNative("addQuest", func(jsData core.InvokeData) interface{} {
+		var data struct {
+			Name string
+		}
+		core.DecodeInvokeData(&data, jsData)
+
+		currentGameMode.quests.addQuest(data.Name, nil)
 		return nil
 	})
 }

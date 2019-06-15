@@ -13,14 +13,14 @@ var (
 type questCommandTable func(qs *quest, qt *questTask, args []string) bool
 
 type questManager struct {
-	quests   []quest
 	commands map[string]questCommandTable
+	quests   []quest
 }
 
 func newQuestManager() questManager {
 	res := questManager{
-		quests:   []quest{},
 		commands: map[string]questCommandTable{},
+		quests:   []quest{},
 	}
 
 	questInitBaseCommands(&res)

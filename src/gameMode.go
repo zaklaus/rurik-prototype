@@ -30,6 +30,7 @@ func (g *gameMode) Init() {
 	initHUD()
 
 	g.playState = stateLevelSelection
+	g.quests = newQuestManager()
 }
 
 func (g *gameMode) Shutdown() {}
