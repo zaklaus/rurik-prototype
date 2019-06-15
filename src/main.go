@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	screenW = 640
-	screenH = 360
+	screenW = 960
+	screenH = 540
 	windowW = 1600
 	windowH = 900
 )
