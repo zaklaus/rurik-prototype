@@ -70,6 +70,10 @@ The task flow happens serially and can be paused when condition is not met.
 
 Tasks execute commands that are registered on the game side. It's important to note that most commands won't block the task execution, but some are designed to pause it for a later iteration.
 
+### Quest events
+
+They are similar to tasks, however they only get executed remotely. Events make use of a stack machine to pop values from the game. This can be used to synchronize values with local quest variables.
+
 #### Commands
 
 The game offers the following commands usable by the system:
