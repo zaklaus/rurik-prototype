@@ -39,8 +39,8 @@ QST:
     variable healCount
     setvar requiredHealCount ($random % 5 + 3)
     setvar rewardGold (10 + ($random % 15) - 5)
-    timer _ReadyToRemind_ 5 -1
-    timer _SetHealCountToRequiredValue_ 15 -1
+    timer _ReadyToRemind_ 5
+    timer _SetHealCountToRequiredValue_ 15
 
     say 1010
     stage 2000

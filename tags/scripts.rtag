@@ -1,0 +1,7 @@
+---
+name: Dev scripts
+author: Dominik Madarász
+version: v1
+desc: Development scripts
+chunks:
+- file: scripts/questing.js

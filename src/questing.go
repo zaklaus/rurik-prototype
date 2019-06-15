@@ -40,17 +40,6 @@ type questStage struct {
 	state int
 }
 
-func newQuestManager() questManager {
-	res := questManager{
-		quests:   []quest{},
-		commands: map[string]questCommandTable{},
-	}
-
-	questInitBaseCommands(&res)
-
-	return res
-}
-
 func (qs *quest) printf(qt *questTask, format string, args ...interface{}) {
 	log.Printf("Quest '%s':'%s'(%d): %s", qs.name, qt.name, qt.pc, fmt.Sprintf(format, args...))
 }

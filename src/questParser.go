@@ -377,12 +377,23 @@ type questDef struct {
 	tasks     []questTask
 }
 
+var (
+	questCache = map[string]*questDef{}
+)
+
 func parseQuest(questName string) *questDef {
 	questAsset := system.FindAsset(fmt.Sprintf("quests/%s.qst", strings.ToLower(questName)))
 
 	if questAsset == nil {
 		log.Fatalf("Quest '%s' could not be found!\n", questName)
 		return nil
+	}
+
+	cachedQuest, ok := questCache[questName]
+
+	if ok {
+		log.Printf("Reusing existing quest template '%s'", questName)
+		return cachedQuest
 	}
 
 	parser := questParser{
@@ -405,12 +416,13 @@ func parseQuest(questName string) *questDef {
 			def.resources = parser.parseResources()
 		case kwStages:
 			def.tasks = parser.parseTasks()
-			return def
 		default:
 			log.Fatalf("Undefined token at '%d'! It says: '%s'.\n", t.wordPos, ident)
 			return def
 		}
 	}
+
+	questCache[questName] = def
 
 	return def
 }

@@ -17,6 +17,17 @@ type questManager struct {
 	commands map[string]questCommandTable
 }
 
+func newQuestManager() questManager {
+	res := questManager{
+		quests:   []quest{},
+		commands: map[string]questCommandTable{},
+	}
+
+	questInitBaseCommands(&res)
+
+	return res
+}
+
 func (q *questManager) getActiveQuests() []*quest {
 	qs := []*quest{}
 
