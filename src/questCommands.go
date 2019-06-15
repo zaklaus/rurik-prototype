@@ -1,5 +1,7 @@
 package main
 
+import "github.com/zaklaus/rurik/src/core"
+
 func questInitBaseCommands(q *questManager) {
 	q.registerCommand("variable", func(qs *quest, qt *questTask, args []string) bool {
 		if len(args) != 1 {
@@ -247,6 +249,15 @@ func questInitBaseCommands(q *questManager) {
 		default:
 			return questCommandErrorArgComp("when", qs, qt, args[2])
 		}
+	})
+
+	q.registerCommand("invoke", func(qs *quest, qt *questTask, args []string) bool {
+		if len(args) < 1 {
+			return questCommandErrorArgCount("invoke", qs, qt, len(args), 1)
+		}
+
+		core.FireEvent(args[0], args[1:])
+		return true
 	})
 
 	// temp

@@ -17,8 +17,12 @@ const (
 	collisionPawn uint32 = core.FirstCollisionType
 )
 
+var (
+	currentGameMode *gameMode
+)
+
 func main() {
-	gm := &gameMode{}
+	currentGameMode = &gameMode{}
 
 	rl.SetTraceLog(0)
 
@@ -26,7 +30,8 @@ func main() {
 	registerClasses()
 	registerInputActions()
 	registerCollisionTypes()
-	core.Run(gm, true)
+	registerEvents()
+	core.Run(currentGameMode, true)
 }
 
 func registerInputActions() {
@@ -38,6 +43,19 @@ func registerInputActions() {
 
 func registerCollisionTypes() {
 	core.AddCollisionType("pawn", collisionPawn)
+}
+
+func registerEvents() {
+	core.RegisterNative("quest", func(jsData core.InvokeData) interface{} {
+		var data struct {
+			name string
+			args []int
+		}
+		core.DecodeInvokeData(&data, jsData)
+
+		currentGameMode.quests.callEvent(data.name, data.args)
+		return nil
+	})
 }
 
 func registerClasses() {
