@@ -1,0 +1,21 @@
+TITLE: Event-driven quest
+BRIEFING: This quest makes use of linked variables and event messaging
+
+QRC:
+
+MESSAGE: 1000
+We're done!
+
+QST:
+
+variable _Counter_
+variable @A
+
+task _S.00_:
+    when _Counter_ above 100
+    say 1000
+    finish
+
+event _TestIncrementCounter_:
+    pop @A
+    setvar _Counter_ (_Counter_ + @A)

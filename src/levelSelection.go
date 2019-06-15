@@ -119,7 +119,9 @@ func (g *gameMode) updateLevelSelection() {
 
 		//temp
 		//g.quests.addQuest("TEST0", nil)
-		g.quests.addQuest("EXAMPLE", nil)
+		//g.quests.addQuest("EXAMPLE", nil)
+		g.quests.addQuest("EVENTS", nil)
+		g.quests.callEvent("_TestIncrementCounter_", []int{120})
 	}
 }
 

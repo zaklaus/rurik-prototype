@@ -27,6 +27,7 @@ const (
 	kwStage      = "stage"
 	kwStages     = "qst"
 	kwTask       = "task"
+	kwEvent      = "event"
 	kwSet        = "set"
 	kwAbove      = "above"
 	kwBelow      = "below"
@@ -58,6 +59,9 @@ type questTask struct {
 	commands []questCmd
 	pc       int
 	isDone   bool
+
+	isEvent   bool
+	eventArgs []int
 }
 
 type questCmd struct {
@@ -314,7 +318,7 @@ func (p *questParser) parseTasks() (res []questTask) {
 	for t := p.peekToken(); t.kind == tkIdentifier; t = p.peekToken() {
 		kw := strings.ToLower(p.nextIdentifier())
 
-		if kw != kwTask {
+		if kw != kwTask && kw != kwEvent {
 			log.Fatalf("Invalid task found at '%d'!\n", t.wordPos)
 			return
 		}
@@ -325,6 +329,7 @@ func (p *questParser) parseTasks() (res []questTask) {
 		res = append(res, questTask{
 			name:     taskName,
 			commands: p.parseTask(),
+			isEvent:  kw == kwEvent,
 		})
 
 		log.Printf("Task '%s' has been added!", taskName)
@@ -341,7 +346,7 @@ func (p *questParser) parseTask() (res []questCmd) {
 
 	for t := p.peekToken(); t.kind == tkIdentifier; t = p.peekToken() {
 		// end of the line
-		if t.text == kwTask {
+		if t.text == kwTask || t.text == kwEvent {
 			break
 		}
 
