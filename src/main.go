@@ -25,6 +25,7 @@ func main() {
 	currentGameMode = &gameMode{}
 
 	rl.SetTraceLog(0)
+	rl.SetExitKey(0)
 
 	core.InitUserEvents = registerEvents
 	core.InitCore("Darkorbia", windowW, windowH, screenW, screenH)

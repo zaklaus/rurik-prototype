@@ -48,7 +48,7 @@ func (g *gameMode) drawLevelSelection() {
 	width := system.ScreenWidth
 	start := system.ScreenHeight / 2
 
-	rl.DrawText(levelSelection.banner, 15, 30, 10, rl.RayWhite)
+	rl.DrawText(levelSelection.banner, 15, 30, 23, rl.RayWhite)
 
 	// choices
 	chsX := width / 2
@@ -62,24 +62,26 @@ func (g *gameMode) drawLevelSelection() {
 		levelSelection.mouseDoublePressTime = 0
 	}
 
+	var ySpacing int32 = 19
+
 	if len(levelSelection.levels) > 0 {
 		for idx, ch := range levelSelection.levels {
-			ypos := chsY + int32(idx)*15 - 2
+			ypos := chsY + int32(idx)*ySpacing - 2
 			if idx == levelSelection.selectedChoice {
-				rl.DrawRectangle(chsX-100, ypos, 200, 15, rl.DarkPurple)
+				rl.DrawRectangle(chsX-100, ypos, 200, ySpacing, rl.DarkPurple)
 			}
 
 			core.DrawTextCentered(
 				fmt.Sprintf("%s (%s)", ch.title, ch.mapName),
 				chsX,
-				chsY+int32(idx)*15,
-				10,
+				chsY+int32(idx)*ySpacing,
+				16,
 				rl.White,
 			)
 
-			if core.IsMouseInRectangle(chsX-100, ypos, 200, 15) {
+			if core.IsMouseInRectangle(chsX-100, ypos, 200, ySpacing) {
 				if rl.IsMouseButtonDown(rl.MouseLeftButton) {
-					rl.DrawRectangleLines(chsX-100, ypos, 200, 15, rl.Pink)
+					rl.DrawRectangleLines(chsX-100, ypos, 200, ySpacing, rl.Pink)
 				} else if rl.IsMouseButtonReleased(rl.MouseLeftButton) {
 					levelSelection.selectedChoice = idx
 
@@ -89,7 +91,7 @@ func (g *gameMode) drawLevelSelection() {
 						levelSelection.mouseDoublePressTime = MouseDoublePress
 					}
 				} else {
-					rl.DrawRectangleLines(chsX-100, ypos, 200, 15, rl.Purple)
+					rl.DrawRectangleLines(chsX-100, ypos, 200, ySpacing, rl.Purple)
 				}
 			}
 		}

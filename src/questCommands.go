@@ -246,6 +246,12 @@ func questInitBaseCommands(q *questManager) {
 			return lhs == rhs
 		case kwNotEquals:
 			return lhs != rhs
+		case kwAnd:
+			return (lhs != 0) && (rhs != 0)
+		case kwOr:
+			return (lhs != 0) || (rhs != 0)
+		case kwXor:
+			return ((lhs != 0) || (rhs != 0)) && !((lhs != 0) && (rhs != 0))
 		default:
 			return questCommandErrorArgComp("when", qs, qt, args[2])
 		}
