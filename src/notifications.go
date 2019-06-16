@@ -76,11 +76,16 @@ func drawNotifications() {
 		lines := int32(strings.Count(notif.text, "\n") + 1)
 		panelWidth := 40 + rl.MeasureText(notif.text, 16)
 		panelHeight := 22 * lines
+		var panelYOffset int32
 
-		rl.DrawRectangle(system.ScreenWidth/2-panelWidth/2, panelY, panelWidth, panelHeight, rl.Fade(rl.NewColor(46, 46, 84, 255), notif.easePercentage))
-		core.DrawTextCentered(notif.text, system.ScreenWidth/2, panelY+5, 14, rl.Fade(rl.RayWhite, notif.easePercentage))
+		if notif.easeInOut == -1 {
+			panelYOffset = -int32((1 - notif.easePercentage) * 24)
+		}
 
-		panelY += 24 * lines
+		rl.DrawRectangle(system.ScreenWidth/2-panelWidth/2, panelY+panelYOffset, panelWidth, panelHeight, rl.Fade(rl.NewColor(46, 46, 84, 255), notif.easePercentage))
+		core.DrawTextCentered(notif.text, system.ScreenWidth/2, panelY+panelYOffset+5, 14, rl.Fade(rl.RayWhite, notif.easePercentage))
+
+		panelY += 24*lines + panelYOffset
 	}
 }
 
