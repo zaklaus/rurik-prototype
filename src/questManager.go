@@ -77,6 +77,10 @@ func (q *questManager) addQuest(tplName string, details map[string]int) (bool, s
 	return true, ""
 }
 
+func (q *questManager) reset() {
+	q.quests = []quest{}
+}
+
 func (q *questManager) registerCommand(name string, cb questCommandTable) {
 	q.commands[name] = cb
 }

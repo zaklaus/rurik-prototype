@@ -56,6 +56,7 @@ func (g *gameMode) Update() {
 
 		if system.IsKeyPressed("use") {
 			g.playState = stateLevelSelection
+			g.quests.quests = []quest{}
 		}
 
 		if rl.IsKeyPressed(rl.KeyEscape) {

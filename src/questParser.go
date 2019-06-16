@@ -401,12 +401,12 @@ func parseQuest(questName string) *questDef {
 		return nil
 	}
 
-	cachedQuest, ok := questCache[questName]
+	/* cachedQuest, ok := questCache[questName]
 
 	if ok {
 		log.Printf("Reusing existing quest template '%s'", questName)
 		return cachedQuest
-	}
+	} */
 
 	parser := questParser{
 		data: questAsset.Data,

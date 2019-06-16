@@ -1,6 +1,9 @@
 package main
 
-import "github.com/zaklaus/rurik/src/core"
+import (
+	rl "github.com/zaklaus/raylib-go/raylib"
+	"github.com/zaklaus/rurik/src/core"
+)
 
 func questInitBaseCommands(q *questManager) {
 	q.registerCommand("variable", func(qs *quest, qt *questTask, args []string) bool {
@@ -279,6 +282,7 @@ func questInitBaseCommands(q *questManager) {
 		}
 
 		qs.printf(qt, "temp saying[%s]: %s", args[0], qs.processText(res.content))
+		PushNotification(qs.processText(res.content), rl.RayWhite)
 
 		return true
 	})
