@@ -56,7 +56,7 @@ func (c *characterController) update() {
 	// Handle free fall
 	{
 		down, _ := core.CheckForCollisionEx([]uint32{}, c.Object, 0, 4)
-		c.IsGrounded = down.Colliding()
+		c.IsGrounded = down.Colliding() && !c.IsOnLadder
 		if !c.IsGrounded && !c.IsInWater && !c.IsOnLadder {
 			g := gravity
 

@@ -14,7 +14,8 @@ const (
 )
 
 const (
-	collisionPawn uint32 = core.FirstCollisionType
+	collisionMeta uint32 = core.FirstCollisionType
+	collisionPawn
 )
 
 var (
@@ -27,7 +28,7 @@ func main() {
 	rl.SetTraceLog(0)
 	rl.SetExitKey(0)
 
-	core.InitUserEvents = registerEvents
+	core.InitUserEvents = registerNatives
 	core.InitCore("Darkorbia", windowW, windowH, screenW, screenH)
 	registerClasses()
 	registerInputActions()
@@ -44,35 +45,6 @@ func registerInputActions() {
 
 func registerCollisionTypes() {
 	core.AddCollisionType("pawn", collisionPawn)
-}
-
-func registerEvents() {
-	core.RegisterNative("quest", func(jsData core.InvokeData) interface{} {
-		var data struct {
-			Name string
-			Args []int64
-		}
-		core.DecodeInvokeData(&data, jsData)
-
-		args := []int{}
-
-		for _, x := range data.Args {
-			args = append(args, int(x))
-		}
-
-		currentGameMode.quests.callEvent(data.Name, args)
-		return nil
-	})
-
-	core.RegisterNative("addQuest", func(jsData core.InvokeData) interface{} {
-		var data struct {
-			Name string
-		}
-		core.DecodeInvokeData(&data, jsData)
-
-		currentGameMode.quests.addQuest(data.Name, nil)
-		return nil
-	})
 }
 
 func registerClasses() {

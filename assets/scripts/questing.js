@@ -4,12 +4,13 @@
         Name: "EXAMPLE"
     })
 
-    invoke("addQuest", {
+    var eventsID = invoke("addQuest", {
         Name: "EVENTS"
     })
 
     invoke("quest", {
-        Name: "EVENTS",
+        ID: eventsID,
+        EventName: "_TestIncrementCounter_",
         Args: [120]
     })
 

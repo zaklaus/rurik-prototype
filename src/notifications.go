@@ -74,16 +74,20 @@ func drawNotifications() {
 
 	for _, notif := range notificationQueue {
 		lines := int32(strings.Count(notif.text, "\n") + 1)
-		panelWidth := 40 + rl.MeasureText(notif.text, 16)
-		panelHeight := 22 * lines
+		// panelWidth := 40 + rl.MeasureText(notif.text, 16)
+		// panelHeight := 22 * lines
 		var panelYOffset int32
 
 		if notif.easeInOut == -1 {
 			panelYOffset = -int32((1 - notif.easePercentage) * 24)
 		}
 
-		rl.DrawRectangle(system.ScreenWidth/2-panelWidth/2, panelY+panelYOffset, panelWidth, panelHeight, rl.Fade(rl.NewColor(46, 46, 84, 255), notif.easePercentage))
-		core.DrawTextCentered(notif.text, system.ScreenWidth/2, panelY+panelYOffset+5, 14, rl.Fade(rl.RayWhite, notif.easePercentage))
+		faceColor := rl.NewColor(177, 145, 184, 255)
+		shadeColor := rl.NewColor(111, 94, 115, 255)
+
+		//rl.DrawRectangle(system.ScreenWidth/2-panelWidth/2, panelY+panelYOffset, panelWidth, panelHeight, rl.Fade(rl.NewColor(46, 46, 84, 255), notif.easePercentage))
+		core.DrawTextCentered(notif.text, system.ScreenWidth/2+1, panelY+panelYOffset+5+1, 14, rl.Fade(shadeColor, notif.easePercentage))
+		core.DrawTextCentered(notif.text, system.ScreenWidth/2, panelY+panelYOffset+5, 14, rl.Fade(faceColor, notif.easePercentage))
 
 		panelY += 24*lines + panelYOffset
 	}

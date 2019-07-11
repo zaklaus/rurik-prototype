@@ -22,6 +22,7 @@ const (
 )
 
 type quest struct {
+	ID        int64
 	name      string
 	state     int
 	variables map[string]int
@@ -168,6 +169,10 @@ func (qs *quest) processTasks(q *questManager) {
 func (qs *quest) callEvent(q *questManager, name string, args []int) {
 	for i := range qs.tasks {
 		v := &qs.tasks[i]
+
+		if v.name != name {
+			continue
+		}
 
 		v.isDone = false
 		v.eventArgs = args[:]

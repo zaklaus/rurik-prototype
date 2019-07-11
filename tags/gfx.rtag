@@ -7,3 +7,4 @@ chunks:
 - file: gfx/player.json
 - file: gfx/player.png
 - file: gfx/gamehud.png
+- file: gfx/pda.png

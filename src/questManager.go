@@ -19,7 +19,7 @@ type questManager struct {
 	quests   []quest
 }
 
-func newQuestManager() questManager {
+func makeQuestManager() questManager {
 	res := questManager{
 		commands: map[string]questCommandTable{},
 		quests:   []quest{},
@@ -42,15 +42,15 @@ func (q *questManager) getActiveQuests() []*quest {
 	return qs
 }
 
-func (q *questManager) addQuest(tplName string, details map[string]int) (bool, string) {
+func (q *questManager) addQuest(tplName string, details map[string]int) (bool, string, int64) {
 	if len(q.getActiveQuests()) >= maxQuests {
-		return false, "Maximum number of quests has been reached!"
+		return false, "Maximum number of quests has been reached!", -1
 	}
 
 	qd := parseQuest(tplName)
 
 	if qd == nil {
-		return false, "Quest template could not be found!"
+		return false, "Quest template could not be found!", -1
 	}
 
 	if details == nil {
@@ -58,6 +58,7 @@ func (q *questManager) addQuest(tplName string, details map[string]int) (bool, s
 	}
 
 	qn := quest{
+		ID:        getNewID(),
 		name:      tplName,
 		questDef:  *qd,
 		state:     qsInProgress,
@@ -70,11 +71,13 @@ func (q *questManager) addQuest(tplName string, details map[string]int) (bool, s
 		qn.setVariable(v.name, 0)
 	}
 
+	qn.processTask(q, &qn.tasks[0])
+
 	q.quests = append(q.quests, qn)
 
 	log.Printf("Quest '%s' with title '%s' has been added!", tplName, qd.title)
 
-	return true, ""
+	return true, "", qn.ID
 }
 
 func (q *questManager) reset() {
@@ -111,8 +114,14 @@ func (q *questManager) processQuests() {
 	stepCounter++
 }
 
-func (q *questManager) callEvent(name string, args []int) {
+func (q *questManager) callEvent(id int64, eventName string, args []int) {
 	for i := range q.quests {
-		q.quests[i].callEvent(q, name, args)
+		v := &q.quests[i]
+
+		if id != -1 && id != v.ID {
+			continue
+		}
+
+		v.callEvent(q, eventName, args)
 	}
 }

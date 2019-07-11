@@ -16,12 +16,14 @@ type gameMode struct {
 	textWave       int32
 	showHelpScreen bool
 	quests         questManager
+	pda            pdaSystem
 }
 
 const (
 	stateTitleScreen = iota
 	statePlay
 	statePaused
+	statePDA
 	stateLevelSelection
 )
 
@@ -30,7 +32,8 @@ func (g *gameMode) Init() {
 	initHUD()
 
 	g.playState = stateLevelSelection
-	g.quests = newQuestManager()
+	g.quests = makeQuestManager()
+	g.pda = makePDA()
 }
 
 func (g *gameMode) Shutdown() {}
@@ -71,6 +74,13 @@ func (g *gameMode) Update() {
 			g.playState = stateTitleScreen
 		}
 
+	case statePDA:
+		updatePDA(g)
+
+		if rl.IsKeyPressed(rl.KeyTab) {
+			g.playState = statePlay
+		}
+
 	case statePlay:
 		core.UpdateMaps()
 		updateHUD()
@@ -89,35 +99,52 @@ func (g *gameMode) Update() {
 			core.FlushMaps()
 			g.playLevelSelection()
 		}
+
+		if rl.IsKeyPressed(rl.KeyTab) {
+			g.playState = statePDA
+		}
 	}
 }
 
 func (g *gameMode) Serialize(enc *gob.Encoder) {
-	data := demoGameSaveData{
+	data := gameSaveData{
+		globID: globalIDCounter,
 		quests: g.quests,
+		pda:    g.pda,
 	}
 
 	enc.Encode(data)
 }
 
 func (g *gameMode) Deserialize(dec *gob.Decoder) {
-	var saveData demoGameSaveData
+	var saveData gameSaveData
 	dec.Decode(&saveData)
 
+	globalIDCounter = saveData.globID
 	g.quests = saveData.quests
+	g.pda = saveData.pda
 }
 
-type demoGameSaveData struct {
+type gameSaveData struct {
+	globID int64
 	quests questManager
+	pda    pdaSystem
 }
 
 func (g *gameMode) Draw() {
-	rl.BeginMode2D(core.RenderCamera)
-	{
-		core.DrawMap(false)
-		drawWaterParticles()
+	switch g.playState {
+	case statePDA:
+		fallthrough
+	case statePaused:
+		fallthrough
+	case statePlay:
+		rl.BeginMode2D(core.RenderCamera)
+		{
+			core.DrawMap(false)
+			drawWaterParticles()
+		}
+		rl.EndMode2D()
 	}
-	rl.EndMode2D()
 }
 
 func (g *gameMode) DrawUI() {
@@ -134,7 +161,8 @@ func (g *gameMode) DrawUI() {
 	case stateLevelSelection:
 		core.DrawTextCentered("Darkorbia", system.ScreenWidth/2, system.ScreenHeight/2-20+g.textWave, 24, rl.RayWhite)
 		g.drawLevelSelection()
-
+	case statePDA:
+		drawPDA(g)
 	case statePlay:
 		core.DrawMapUI()
 		drawHUD()
