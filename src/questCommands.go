@@ -1,7 +1,6 @@
 package main
 
 import (
-	rl "github.com/zaklaus/raylib-go/raylib"
 	"github.com/zaklaus/rurik/src/core"
 )
 
@@ -31,7 +30,7 @@ func questInitBaseCommands(q *questManager) {
 
 		qs.setVariable(args[0], val)
 
-		qs.printf(qt, "variable '%s' was set to: %d", args[0], val)
+		qs.printf(qt, "variable '%s' was set to: %f", args[0], val)
 
 		return true
 	})
@@ -52,7 +51,7 @@ func questInitBaseCommands(q *questManager) {
 			duration: float32(duration),
 		}
 
-		qs.printf(qt, "timer '%s' was declared with duration: %d", args[0], duration)
+		qs.printf(qt, "timer '%s' was declared with duration: %f", args[0], duration)
 
 		return true
 	})
@@ -214,7 +213,7 @@ func questInitBaseCommands(q *questManager) {
 
 		qs.setVariable(args[0], val)
 
-		qs.printf(qt, "event pop value '%d' for: '%s'", val, args[0])
+		qs.printf(qt, "event pop value '%f' for: '%s'", val, args[0])
 
 		return true
 	})
@@ -269,41 +268,6 @@ func questInitBaseCommands(q *questManager) {
 		return true
 	})
 
-	// temp
-	q.registerCommand("say", func(qs *quest, qt *questTask, args []string) bool {
-		if len(args) != 1 {
-			return questCommandErrorArgCount("say", qs, qt, len(args), 1)
-		}
-
-		res, ok := qs.getResource(args[0])
-
-		if !ok {
-			return questCommandErrorThing("say", "message", qs, qt, args[0])
-		}
-
-		qs.printf(qt, "temp saying[%s]: %s", args[0], qs.processText(res.content))
-		PushNotification(qs.processText(res.content), rl.RayWhite)
-
-		return true
-	})
-
-	q.registerCommand("play", func(qs *quest, qt *questTask, args []string) bool {
-		qs.printf(qt, "playing something")
-		return true
-	})
-
-	q.registerCommand("give", func(qs *quest, qt *questTask, args []string) bool {
-		if len(args) != 2 {
-			return questCommandErrorArgCount("give", qs, qt, len(args), 2)
-		}
-
-		amount, ok := qs.getNumberOrVariable(args[1])
-
-		if !ok {
-			return questCommandErrorArgType("give", qs, qt, args[1], "string", "integer")
-		}
-
-		qs.printf(qt, "giving %d of %s", amount, args[0])
-		return true
-	})
+	// game-specific register
+	questInitCommands(q)
 }

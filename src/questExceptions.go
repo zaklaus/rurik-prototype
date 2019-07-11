@@ -14,6 +14,11 @@ func questCommandErrorArgCount(cmd string, qs *quest, qt *questTask, has, need i
 	return false
 }
 
+func questCommandErrorDivideByZero(cmd string, qs *quest, qt *questTask) bool {
+	log.Printf("%s division by zero", questCommandErrorBase(cmd, qs, qt))
+	return false
+}
+
 func questCommandErrorThing(cmd, thing string, qs *quest, qt *questTask, resName string) bool {
 	log.Printf("%s %s '%s' could not be found", questCommandErrorBase(cmd, qs, qt), thing, resName)
 	return false

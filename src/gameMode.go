@@ -91,8 +91,12 @@ func (g *gameMode) Update() {
 		/* particle systems */
 		updateWaterParticles()
 
-		if rl.IsKeyPressed(rl.KeyEscape) && core.CurrentMap.Name != "start" {
+		if rl.IsKeyPressed(rl.KeyEscape) {
 			g.playState = statePaused
+		}
+
+		if rl.IsKeyPressed(rl.KeyF9) {
+			quitGame()
 		}
 
 		if rl.IsKeyPressed(rl.KeyF5) {

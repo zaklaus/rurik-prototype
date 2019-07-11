@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"math"
 	"math/rand"
 	"strconv"
 	"strings"
@@ -22,13 +21,34 @@ const (
 )
 
 type quest struct {
-	ID        int64
-	name      string
-	state     int
-	variables map[string]int
-	timers    map[string]questTimer
-	stages    map[int]questStage
+	ID               int64
+	name             string
+	runsInBackground bool // used by events, they don't count as an actual quest
+	state            int
+	timers           map[string]questTimer
+	stages           map[int]questStage
+	tasks            []questTask
+	activeQuestTask  *questTask
 	questDef
+}
+
+const (
+	kindNumber = iota
+	kindVector
+)
+
+type questVarData interface {
+	str() string
+}
+
+type questVar struct {
+	kind  int
+	value questVarData
+}
+
+type questTask struct {
+	variables map[string]questVar
+	questTaskDef
 }
 
 type questTimer struct {
@@ -61,8 +81,8 @@ func (qs *quest) getResource(id string) (*questResource, bool) {
 	return &res, true
 }
 
-func (qs *quest) getNumberOrVariable(arg string) (int, bool) {
-	val, err := strconv.Atoi(arg)
+func (qs *quest) getNumberOrVariable(arg string) (float64, bool) {
+	val, err := strconv.ParseFloat(arg, 64)
 
 	if err != nil {
 		exprStr := qs.resolveVariables(arg)
@@ -78,30 +98,94 @@ func (qs *quest) getNumberOrVariable(arg string) (int, bool) {
 			return 0, false
 		}
 
-		return int(math.Floor(res.(float64))), true
+		return res.(float64), true
 	}
 
 	return val, true
 }
 
+func (qs *quest) getRelevantVariables() (a map[string]questVar) {
+	if qs.activeQuestTask == &qs.tasks[0] {
+		return qs.tasks[0].variables
+	}
+
+	a = map[string]questVar{}
+
+	for k, v := range qs.tasks[0].variables {
+		a[k] = v
+	}
+
+	for k, v := range qs.activeQuestTask.variables {
+		a[k] = v
+	}
+
+	return a
+}
+
 func (qs *quest) processText(content string) string {
-	for k, v := range qs.variables {
-		content = strings.ReplaceAll(content, fmt.Sprintf("%%%s%%", k), strconv.Itoa(v))
+	for k, v := range qs.getRelevantVariables() {
+		content = strings.ReplaceAll(content, fmt.Sprintf("%%%s%%", k), v.value.str())
 	}
 
 	return content
 }
 
 func (qs *quest) resolveVariables(expr string) string {
-	for k, v := range qs.variables {
-		expr = strings.ReplaceAll(expr, k, strconv.Itoa(v))
+	for k, v := range qs.getRelevantVariables() {
+		expr = strings.ReplaceAll(expr, k, v.value.str())
 	}
 
 	return expr
 }
 
-func (qs *quest) setVariable(name string, val int) {
-	qs.variables[name] = val
+func (qs *quest) getTaskOverride(name string) *questTask {
+	aq := qs.activeQuestTask
+
+	_, ok := qs.tasks[0].variables[name]
+
+	if ok {
+		aq = &qs.tasks[0]
+	}
+
+	return aq
+}
+
+func (qs *quest) setVariable(name string, val float64) {
+	qs.getTaskOverride(name).variables[name] = questVar{
+		kind:  kindNumber,
+		value: &questVarNumber{value: val},
+	}
+}
+
+func (qs *quest) setVector(name string, val rl.Vector2) {
+	qs.getTaskOverride(name).variables[name] = questVar{
+		kind:  kindVector,
+		value: &questVarVector{value: val},
+	}
+}
+
+func (qs *quest) getVariable(name string) (float64, bool) {
+	vars := qs.getRelevantVariables()
+
+	val, ok := vars[name]
+
+	if !ok {
+		return 0, false
+	}
+
+	return val.value.(*questVarNumber).value, true
+}
+
+func (qs *quest) getVector(name string) (rl.Vector2, bool) {
+	vars := qs.getRelevantVariables()
+
+	val, ok := vars[name]
+
+	if !ok {
+		return rl.Vector2{}, false
+	}
+
+	return val.value.(*questVarVector).value, true
 }
 
 func (qs *quest) processTimers() {
@@ -116,7 +200,7 @@ func (qs *quest) processTimers() {
 			qs.timers[k] = v
 		}
 
-		qs.setVariable(k, int(core.RoundFloatToInt32(v.time)))
+		qs.setVariable(k, float64(core.RoundFloatToInt32(v.time)))
 	}
 }
 
@@ -125,6 +209,8 @@ func (qs *quest) processTask(q *questManager, qt *questTask) bool {
 		qt.isDone = true
 		return false
 	}
+
+	qs.activeQuestTask = qt
 
 	qs.processVariables()
 
@@ -162,11 +248,11 @@ func (qs *quest) processTasks(q *questManager) {
 			state = 1
 		}
 
-		qs.setVariable(v.name, state)
+		qs.setVariable(v.name, float64(state))
 	}
 }
 
-func (qs *quest) callEvent(q *questManager, name string, args []int) {
+func (qs *quest) callEvent(q *questManager, name string, args []float64) {
 	for i := range qs.tasks {
 		v := &qs.tasks[i]
 
@@ -184,10 +270,17 @@ func (qs *quest) callEvent(q *questManager, name string, args []int) {
 }
 
 func (qs *quest) processVariables() {
-	qs.setVariable("$random", rand.Int())
-	qs.setVariable("$step", stepCounter)
-	qs.setVariable("$time", int(core.RoundFloatToInt32(rl.GetTime())))
+	qt := qs.activeQuestTask
+	qs.activeQuestTask = &qs.tasks[0]
+	qs.setVariable("$random", float64(rand.Int()))
+	qs.setVariable("$frandom", rand.Float64())
+	qs.setVariable("$step", float64(stepCounter))
+	qs.setVariable("$time", float64(rl.GetTime()))
+
+	// player
+	qs.setVector("$pc.position", core.LocalPlayer.Position)
 
 	// temp
-	qs.setVariable("$pc.health", int(barStats[barHealth].Value))
+	qs.setVariable("$pc.health", float64(barStats[barHealth].Value))
+	qs.activeQuestTask = qt
 }

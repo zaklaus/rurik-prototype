@@ -19,6 +19,7 @@ import (
 // Quest language keywords
 const (
 	kwTitle      = "title"
+	kwBackground = "+background"
 	kwBriefing   = "briefing"
 	kwResources  = "qrc"
 	kwMessage    = "message"
@@ -57,14 +58,14 @@ type questToken struct {
 	wordPos int
 }
 
-type questTask struct {
+type questTaskDef struct {
 	name     string
 	commands []questCmd
 	pc       int
 	isDone   bool
 
 	isEvent   bool
-	eventArgs []int
+	eventArgs []float64
 }
 
 type questCmd struct {
@@ -316,11 +317,11 @@ func (p *questParser) parseResources() (res map[int]questResource) {
 	return
 }
 
-func (p *questParser) parseTasks() (res []questTask) {
-	res = []questTask{}
+func (p *questParser) parseTasks() (res []questTaskDef) {
+	res = []questTaskDef{}
 
 	// Handle headless main task (entry point)
-	res = append(res, questTask{
+	res = append(res, questTaskDef{
 		name:     "<entry-point>",
 		commands: p.parseTask(),
 	})
@@ -338,13 +339,19 @@ func (p *questParser) parseTasks() (res []questTask) {
 		taskName := p.nextIdentifier()
 		p.expect(kwScope)
 
-		res = append(res, questTask{
+		res = append(res, questTaskDef{
 			name:     taskName,
 			commands: p.parseTask(),
 			isEvent:  kw == kwEvent,
 		})
 
-		log.Printf("Task '%s' has been added!", taskName)
+		taskType := "Task"
+
+		if kw == kwEvent {
+			taskType = "Event"
+		}
+
+		log.Printf("%s '%s' has been added!", taskType, taskName)
 
 		p.skipSeparators()
 	}
@@ -383,10 +390,11 @@ func (p *questParser) parseTask() (res []questCmd) {
 
 // questDef describes the quest definition file and the opcodes
 type questDef struct {
-	title     string
-	briefing  string
-	resources map[int]questResource
-	tasks     []questTask
+	title            string
+	briefing         string
+	runsInBackground bool
+	resources        map[int]questResource
+	taskDef          []questTaskDef
 }
 
 var (
@@ -417,6 +425,12 @@ func parseQuest(questName string) *questDef {
 	for t := parser.peekToken(); t.kind != tkEndOfFile; t = parser.peekToken() {
 		parser.skipSeparators()
 		ident := parser.nextIdentifier()
+
+		if ident[0] == '+' {
+			parser.handleFlag(def, ident)
+			continue
+		}
+
 		parser.expect(kwScope)
 
 		switch strings.ToLower(ident) {
@@ -427,7 +441,7 @@ func parseQuest(questName string) *questDef {
 		case kwResources:
 			def.resources = parser.parseResources()
 		case kwStages:
-			def.tasks = parser.parseTasks()
+			def.taskDef = parser.parseTasks()
 		default:
 			log.Fatalf("Undefined token at '%d'! It says: '%s'.\n", t.wordPos, ident)
 			return def
@@ -437,6 +451,13 @@ func parseQuest(questName string) *questDef {
 	questCache[questName] = def
 
 	return def
+}
+
+func (p *questParser) handleFlag(def *questDef, flag string) {
+	switch flag {
+	case kwBackground:
+		def.runsInBackground = true
+	}
 }
 
 func isAlpha(c rune) bool {

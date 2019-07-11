@@ -34,7 +34,7 @@ func (q *questManager) getActiveQuests() []*quest {
 	qs := []*quest{}
 
 	for _, v := range q.quests {
-		if v.state == qsInProgress {
+		if v.state == qsInProgress && !v.runsInBackground {
 			qs = append(qs, &v)
 		}
 	}
@@ -42,36 +42,60 @@ func (q *questManager) getActiveQuests() []*quest {
 	return qs
 }
 
-func (q *questManager) addQuest(tplName string, details map[string]int) (bool, string, int64) {
-	if len(q.getActiveQuests()) >= maxQuests {
+func (q *questManager) addQuest(tplName string, details map[string]float64) (bool, string, int64) {
+	qd := parseQuest(tplName)
+
+	if !qd.runsInBackground && len(q.getActiveQuests()) >= maxQuests {
 		return false, "Maximum number of quests has been reached!", -1
 	}
-
-	qd := parseQuest(tplName)
 
 	if qd == nil {
 		return false, "Quest template could not be found!", -1
 	}
 
 	if details == nil {
-		details = map[string]int{}
+		details = map[string]float64{}
 	}
 
-	qn := quest{
-		ID:        getNewID(),
-		name:      tplName,
-		questDef:  *qd,
-		state:     qsInProgress,
-		variables: details,
-		timers:    map[string]questTimer{},
-		stages:    map[int]questStage{},
+	tasks := []questTask{}
+
+	for _, v := range qd.taskDef {
+		tasks = append(tasks, questTask{
+			questTaskDef: v,
+			variables:    map[string]questVar{},
+		})
 	}
+
+	processedDetails := map[string]questVar{}
+
+	for k, v := range details {
+		processedDetails[k] = questVar{
+			kind:  kindNumber,
+			value: &questVarNumber{value: v},
+		}
+	}
+
+	tasks[0].variables = processedDetails
+
+	qn := quest{
+		ID:       getNewID(),
+		name:     tplName,
+		questDef: *qd,
+		state:    qsInProgress,
+		timers:   map[string]questTimer{},
+		stages:   map[int]questStage{},
+		tasks:    tasks,
+	}
+
+	qn.activeQuestTask = &qn.tasks[0]
 
 	for _, v := range qn.tasks {
 		qn.setVariable(v.name, 0)
 	}
 
-	qn.processTask(q, &qn.tasks[0])
+	for qn.processTask(q, &qn.tasks[0]) {
+		// process the whole entry point
+	}
 
 	q.quests = append(q.quests, qn)
 
@@ -114,7 +138,7 @@ func (q *questManager) processQuests() {
 	stepCounter++
 }
 
-func (q *questManager) callEvent(id int64, eventName string, args []int) {
+func (q *questManager) callEvent(id int64, eventName string, args []float64) {
 	for i := range q.quests {
 		v := &q.quests[i]
 

@@ -53,3 +53,7 @@ func registerClasses() {
 	core.RegisterClass("ladder", NewLadder)
 	core.RegisterClass("ball", NewBall)
 }
+
+func quitGame() {
+	core.CloseGame()
+}
