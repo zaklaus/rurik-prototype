@@ -30,16 +30,16 @@ event _TestIncrementCounter_:
 
     addvec ^pos ^pos $pc.position
     log vec ^pos
-    
+
     getvec ^pos 0 _YPosition_
     log num _YPosition_
-    
+
     copyvec ^dpos ^pos
     log vec ^dpos
-    
+
     getvec ^dpos ^^0 ^^1
     setvec ^dpos (^^0) (^^1 + 5)
-    
+
     subvec ^pos2dpos ^pos ^dpos
     lenvec _DistanceBetweenVectors_ ^pos2dpos
     log num _DistanceBetweenVectors_
