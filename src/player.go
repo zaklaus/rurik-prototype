@@ -103,14 +103,6 @@ func updatePlayer(p *core.Object, dt float32) {
 
 	if ry.Vector2Length(p.Movement) > 0 {
 		p.Facing.X = core.SignFloat(p.Movement.X)
-
-		//tag = "Walk"
-	}
-
-	if p.Facing.X > 0 {
-		tag += "E"
-	} else if p.Facing.X < 0 {
-		tag += "W"
 	}
 
 	core.PlayAnim(p, tag)
@@ -121,10 +113,8 @@ func drawPlayer(p *core.Object) {
 	source := core.GetSpriteRectangle(p)
 	dest := core.GetSpriteOrigin(p)
 
-	if core.DebugMode && p.DebugVisible {
-		c := core.GetSpriteAABB(p)
-		rl.DrawRectangleLinesEx(c.ToFloat32(), 1, rl.Blue)
-		core.DrawTextCentered(p.Name, c.X+c.Width/2, c.Y+c.Height+2, 1, rl.White)
+	if p.Facing.X == -1 {
+		source.Width *= -1
 	}
 
 	rl.DrawTexturePro(*p.Texture, source, dest, rl.Vector2{}, 0, rl.White)

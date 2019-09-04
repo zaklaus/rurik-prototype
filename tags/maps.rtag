@@ -4,3 +4,4 @@ author: Dominik Madarász
 version: v1
 desc: Maps used in the game (production)
 chunks:
+- file: map/intro/intro.tmx

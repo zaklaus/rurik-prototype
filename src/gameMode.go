@@ -28,6 +28,7 @@ const (
 )
 
 func (g *gameMode) Init() {
+	rand.Seed(int64(time.Now().Nanosecond()))
 	initLevels()
 	initHUD()
 
@@ -39,8 +40,6 @@ func (g *gameMode) Init() {
 func (g *gameMode) Shutdown() {}
 
 func (g *gameMode) Update() {
-	rand.Seed(int64(time.Now().Nanosecond()))
-
 	switch g.playState {
 	case statePaused:
 		if rl.IsKeyPressed(rl.KeyEscape) {
@@ -172,6 +171,17 @@ func (g *gameMode) DrawUI() {
 		drawHUD()
 		drawDialogue()
 		drawNotifications()
+	}
+}
+
+func (g *gameMode) DebugDraw() {
+	switch g.playState {
+	case statePlay:
+		rl.BeginMode2D(core.RenderCamera)
+		{
+			core.CurrentMap.World.DrawDebugObjects()
+		}
+		rl.EndMode2D()
 	}
 }
 

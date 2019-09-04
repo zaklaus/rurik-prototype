@@ -22,7 +22,7 @@ func (b *ball) Deserialize(dec *gob.Decoder) {}
 func NewBall(o *core.Object) {
 	o.IsCollidable = true
 	o.Size = []int32{int32(o.Meta.Width), int32(o.Meta.Height)}
-	o.GetAABB = core.GetSolidAABB
+	o.GetAABB = core.GetSpriteAABB
 	o.CollisionType = core.CollisionRigid
 	o.DebugVisible = true
 	o.UserData = &ball{}

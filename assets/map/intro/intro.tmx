@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="5" height="3" tilewidth="32" tileheight="32" infinite="0" nextlayerid="13" nextobjectid="15">
+ <properties>
+  <property name="skyColor" type="color" value="#ff2f2f2f"/>
+ </properties>
+ <tileset firstgid="1" source="../../tilesets/apartments.tsx"/>
+ <layer id="8" name="Base" width="5" height="3">
+  <data encoding="base64" compression="zlib">
+   eJwTY2A4IM7A4ADDYkDMzcDQwMjAwADDQD4DD1CMF0jDMJDPAACSBAOK
+  </data>
+ </layer>
+ <layer id="9" name="Objects" width="5" height="3">
+  <data encoding="base64" compression="zlib">
+   eJxjYCAesAIxGxIfAADUAAw=
+  </data>
+ </layer>
+ <objectgroup id="10" name="Props">
+  <object id="1" name="screen" type="tile" gid="4" x="121.25" y="95.75" width="32" height="32">
+   <properties>
+    <property name="atten" type="float" value="128"/>
+    <property name="color" type="color" value="#ff6f9ced"/>
+    <property name="dbgShow" value="0"/>
+    <property name="light" value="1"/>
+    <property name="offset" value="11 -27"/>
+    <property name="radius" type="float" value="16"/>
+    <property name="specular" value="1"/>
+   </properties>
+  </object>
+  <object id="2" gid="3" x="95" y="93.5" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup id="11" name="Cols" visible="0">
+  <properties>
+   <property name="col" value="1"/>
+  </properties>
+  <object id="3" x="-1" y="93.25" width="124" height="2.5"/>
+  <object id="4" x="-0.5" y="-1.25" width="7.5" height="92.5"/>
+  <object id="5" x="123.5" y="7.75" width="37" height="88"/>
+  <object id="8" x="7.5" y="0" width="152.5" height="7.5"/>
+ </objectgroup>
+ <objectgroup id="12" name="Logic">
+  <object id="6" name="player" type="player" x="63.75" y="77.5">
+   <point/>
+  </object>
+  <object id="7" name="camera" type="cam" x="78.75" y="49">
+   <properties>
+    <property name="mode" value="follow"/>
+    <property name="target" value="player"/>
+    <property name="zoom" value="4"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="11" name="ball" type="ball" x="19" y="34.75" width="16" height="16">
+   <ellipse/>
+  </object>
+  <object id="13" name="dummy_light" type="notnull" x="47.5" y="34.5">
+   <properties>
+    <property name="atten" type="float" value="128"/>
+    <property name="color" type="color" value="#ffe6eaed"/>
+    <property name="dbgShow" value="0"/>
+    <property name="light" value="1"/>
+    <property name="radius" type="float" value="16"/>
+    <property name="specular" value="0"/>
+   </properties>
+   <point/>
+  </object>
+ </objectgroup>
+</map>

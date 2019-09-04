@@ -26,6 +26,14 @@ var levelSelection struct {
 func initLevels() {
 	levelSelection.levels = []level{
 		level{
+			title:   "Intro scene",
+			mapName: "intro",
+		},
+		level{
+			title:   "------------",
+			mapName: "",
+		},
+		level{
 			title:   "Movement test",
 			mapName: "movement",
 		},
@@ -71,8 +79,14 @@ func (g *gameMode) drawLevelSelection() {
 				rl.DrawRectangle(chsX-100, ypos, 200, ySpacing, rl.DarkPurple)
 			}
 
+			mapName := ""
+
+			if ch.mapName != "" {
+				mapName = fmt.Sprintf(" (%s)", ch.mapName)
+			}
+
 			core.DrawTextCentered(
-				fmt.Sprintf("%s (%s)", ch.title, ch.mapName),
+				fmt.Sprintf("%s%s", ch.title, mapName),
 				chsX,
 				chsY+int32(idx)*ySpacing,
 				16,
@@ -135,6 +149,10 @@ func (g *gameMode) loadLevel(mapName string) {
 
 func (g *gameMode) playLevelSelection() {
 	mapName := levelSelection.levels[levelSelection.selectedChoice].mapName
+
+	if mapName == "" {
+		return
+	}
 
 	if mapName == "$exitGame" {
 		core.CloseGame()
