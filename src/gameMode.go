@@ -193,6 +193,9 @@ func (g *gameMode) PostDraw() {
 	case statePaused:
 		fallthrough
 
+	case statePDA:
+		fallthrough
+
 	case statePlay:
 		// Generates and applies the lightmaps
 		core.UpdateLightingSolution()

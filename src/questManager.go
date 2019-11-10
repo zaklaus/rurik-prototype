@@ -45,12 +45,12 @@ func (q *questManager) getActiveQuests() []*quest {
 func (q *questManager) addQuest(tplName string, details map[string]float64) (bool, string, int64) {
 	qd := parseQuest(tplName)
 
-	if !qd.runsInBackground && len(q.getActiveQuests()) >= maxQuests {
-		return false, "Maximum number of quests has been reached!", -1
-	}
-
 	if qd == nil {
 		return false, "Quest template could not be found!", -1
+	}
+
+	if !qd.runsInBackground && len(q.getActiveQuests()) >= maxQuests {
+		return false, "Maximum number of quests has been reached!", -1
 	}
 
 	if details == nil {

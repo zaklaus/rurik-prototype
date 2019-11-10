@@ -45,7 +45,7 @@ func NewPlayer(p *core.Object) {
 
 	core.LocalPlayer = p
 
-	core.PlayAnim(p, "StandE")
+	core.PlayAnim(p, "Stand")
 	plr := &player{
 		ctrl: &characterController{
 			Object: p,

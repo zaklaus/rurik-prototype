@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="5" height="3" tilewidth="32" tileheight="32" infinite="0" nextlayerid="13" nextobjectid="15">
  <properties>
-  <property name="skyColor" type="color" value="#ff2f2f2f"/>
+  <property name="skyColor" type="color" value="#ff1b1b1b"/>
  </properties>
  <tileset firstgid="1" source="../../tilesets/apartments.tsx"/>
  <layer id="8" name="Base" width="5" height="3">
@@ -22,7 +22,7 @@
     <property name="dbgShow" value="0"/>
     <property name="light" value="1"/>
     <property name="offset" value="11 -27"/>
-    <property name="radius" type="float" value="16"/>
+    <property name="radius" type="float" value="8"/>
     <property name="specular" value="1"/>
    </properties>
   </object>
